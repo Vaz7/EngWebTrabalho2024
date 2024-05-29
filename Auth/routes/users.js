@@ -4,12 +4,10 @@ var userModel = require('../models/user')
 var jwt = require('jsonwebtoken')
 var auth = require('../auth/auth')
 var User = require('../controllers/user')
+var passport = require('passport')
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-router.post('/register', function (req, res) {
+
+router.post('/registar', function (req, res) {
   var d = new Date().toISOString();
   userModel.register(new userModel({
           username: req.body.username,
@@ -33,6 +31,7 @@ router.post('/register', function (req, res) {
                   jwt.sign({
                           _id: user._id,
                           email: user.email,
+                          username: user.username,
                           level: user.level
                       },
                       "EngWeb2024",
@@ -52,12 +51,106 @@ router.post('/register', function (req, res) {
 });
 
 router.get('/:id', auth.verificaAcesso, function (req, res) {
-  if(req.params.id === req.idUser){
+  if(req.params.id === req.idUtilizador){
       User.getUser(req.params.id)
           .then(dados => res.status(200).jsonp({ dados: dados }))
           .catch(e => res.status(500).jsonp({ error: e }))
   }else
-      res.status(403).jsonp({error: `[AUTH] The user ${req.user.username} is not authorized to access this information.`})
+      res.status(403).jsonp({error: `O utilizador ${req.user.username} não têm autorização para ver este perfil.`})
 })
 
+
+router.post('/login', passport.authenticate('local'), function (req, res) {
+    jwt.sign({
+            _id: req.user._id, username: req.user.username, email: req.user.email, level: req.user.level
+        },
+        "EngWeb2024",
+        { expiresIn: 3600 }, // 1 hora
+        function (erro, token) {
+            if (erro) res.status(500).jsonp({ error: "Erro na geração do token: " + e })
+            else {
+                User.atualizaUltimoAcesso(req.user._id)
+                res.status(201).jsonp({ token: token })
+            }
+        }
+    );
+})
+
+
+router.put('/:id', auth.verificaAcesso, async function (req, res) {
+    if (req.idUtilizador === req.params.id) {
+        try {
+            const updateData = { ...req.body };
+            const user = await User.getUser(req.params.id);
+            if (!user) {
+                return res.status(404).jsonp({ error: "User not found" });
+            }
+
+            // Check if password is being updated
+            if (updateData.password) {
+                await user.setPassword(updateData.password);
+                delete updateData.password; // Remove password from updateData to prevent plain text password saving
+                await user.save(); // Save the user to persist the new password hash
+            }
+
+            // Update other fields
+            for (let key in updateData) {
+                if (updateData.hasOwnProperty(key)) {
+                    user[key] = updateData[key];
+                }
+            }
+
+            const updatedUser = await user.save(); // Save the user to persist other updates
+
+            // Prepare response with only the desired fields
+            const responseUser = {
+                username: updatedUser.username,
+                email: updatedUser.email,
+                name: updatedUser.name,
+                dateCreated: updatedUser.dateCreated,
+                lastAccess: updatedUser.lastAccess
+            };
+
+            res.jsonp(responseUser);
+        } catch (error) {
+            console.error("Error updating user:", error);
+            res.status(409).jsonp({ error: error.message });
+        }
+    } else {
+        res.status(403).jsonp({ error: `O user ${req.user.username} não têm permissões para alterar os dados do perfil.` });
+    }
+});
+
+
+
+
+
+
+router.delete('/:id', auth.verificaAcesso, function (req, res) {
+    User.deleteUser(req.params.id)
+        .then(dados => {
+            res.jsonp(dados)
+        })
+        .catch(erro => {
+            res.status(500).jsonp(erro)
+        })
+})
+
+//apenas um admin pode criar admins
+router.post('/registaradmin', auth.verificaAdmin,  function (req, res) {
+    var d = new Date().toISOString()
+    userModel.register(new userModel({
+            username: req.body.username, name: req.body.name, email: req.body.email,
+            level: "admin", dateCreated: d.substring(0, 10), lastAccess: d.substring(0, 19)
+        }),
+        req.body.password,
+        function (err, user) {
+            if (err)
+                res.jsonp({ error: err})
+            else {
+                res.sendStatus(200)
+            }
+        }
+    )
+})
 module.exports = router;

@@ -8,8 +8,8 @@ module.exports.verificaAcesso = function (req, res, next) {
 				res.status(401).jsonp({ error: e })
 			}
 			else {
-				req.idUser = payload._id
-				req.isAdmin = payload.level === 'admin'
+				req.idUtilizador = payload._id
+				req.isAdministrador = payload.level === 'admin'
                 req.user = payload; // Attach the payload (user information) to req.user
 
 				next()
