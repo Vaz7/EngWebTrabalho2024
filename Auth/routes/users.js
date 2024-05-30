@@ -22,7 +22,6 @@ router.post('/registar', function (req, res) {
           if (err) {
               res.jsonp({ error: err });
           } else {
-              // Manually authenticate the user after registration
               req.login(user, function(err) {
                   if (err) {
                       return res.status(500).jsonp({ error: err });
@@ -49,6 +48,99 @@ router.post('/registar', function (req, res) {
       }
   );
 });
+
+router.get("/login/facebook", function (req, res) {
+    const returnUrl = req.query.returnUrl;
+    req.session.returnUrl = returnUrl;
+
+    passport.authenticate("facebook")(req, res);
+});
+
+router.get("/login/google", function (req, res) {
+    const returnUrl = req.query.returnUrl;
+    req.session.returnUrl = returnUrl;
+
+    passport.authenticate("google", {scope: ["profile", "email"]})(req, res);
+});
+
+
+router.get("/login/facebook/callback", function (req, res, next) {
+    passport.authenticate("facebook", function (err, user, info, status) {
+      if (err) {
+        return res.status(500).jsonp({ error: "Erro na autenticação: " + err });
+      }
+      if (!user) {
+        return res.status(401).jsonp({ error: "Autenticação falhou. Usuário não encontrado." });
+      }
+  
+      // Log the user object to verify its structure
+      console.log('Authenticated user:', user);
+  
+      jwt.sign(
+        {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          level: user.level
+        },
+        "EngWeb2024",
+        { expiresIn: 3600 },
+        function (erro, token) {
+          if (erro) {
+            return res.status(500).jsonp({ error: "Erro na geração do token: " + erro });
+          }
+  
+          User.atualizaUltimoAcesso(user._id)
+            .then(() => {
+              res.status(201).jsonp({ token: token });
+            })
+            .catch(error => {
+              res.status(500).jsonp({ error: "Erro ao atualizar o último acesso: " + error });
+            });
+        }
+      );
+    })(req, res, next);
+  });
+
+  router.get("/login/google/callback", function (req, res, next) {
+    passport.authenticate("google", function (err, user, info, status) {
+      if (err) {
+        return res.status(500).jsonp({ error: "Erro na autenticação: " + err });
+      }
+      if (!user) {
+        return res.status(401).jsonp({ error: "Autenticação falhou. Usuário não encontrado." });
+      }
+  
+      // Log the user object to verify its structure
+      console.log('Authenticated user:', user);
+  
+      jwt.sign(
+        {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          level: user.level
+        },
+        "EngWeb2024",
+        { expiresIn: 3600 },
+        function (erro, token) {
+          if (erro) {
+            return res.status(500).jsonp({ error: "Erro na geração do token: " + erro });
+          }
+  
+          User.atualizaUltimoAcesso(user._id)
+            .then(() => {
+              res.status(201).jsonp({ token: token });
+            })
+            .catch(error => {
+              res.status(500).jsonp({ error: "Erro ao atualizar o último acesso: " + error });
+            });
+        }
+      ); 
+    })(req, res, next);
+  });
+
+
 
 router.get('/:id', auth.verificaAcesso, function (req, res) {
   if(req.params.id === req.idUtilizador){
@@ -122,19 +214,19 @@ router.put('/:id', auth.verificaAcesso, async function (req, res) {
 });
 
 
-
-
-
-
 router.delete('/:id', auth.verificaAcesso, function (req, res) {
-    User.deleteUser(req.params.id)
-        .then(dados => {
-            res.jsonp(dados)
-        })
-        .catch(erro => {
-            res.status(500).jsonp(erro)
-        })
-})
+    if (req.params.id === req.idUtilizador || req.isAdministrador) {
+        User.deleteUser(req.params.id)
+            .then(dados => {
+                res.jsonp(dados);
+            })
+            .catch(erro => {
+                res.status(500).jsonp({ error: erro });
+            });
+    } else {
+        res.status(403).jsonp({ error: 'Apenas administradores ou o próprio utilizador podem eliminar este perfil.' });
+    }
+});
 
 //apenas um admin pode criar admins
 router.post('/registaradmin', auth.verificaAdmin,  function (req, res) {

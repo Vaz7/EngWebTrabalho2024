@@ -4,8 +4,13 @@ var logger = require('morgan');
 var mongoose = require('mongoose')
 var session = require('express-session'); // Import express-session
 
+
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
+var FacebookStrategy = require("passport-facebook");
+require("dotenv").config();
+var GoogleStrategy = require("passport-google-oauth20").Strategy;
+
 
 var mongoDB = 'mongodb://127.0.0.1/acordaos'
 
@@ -24,6 +29,95 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()))
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      callbackURL: "http://localhost:7777/users/login/facebook/callback",
+      profileFields: ['id', 'displayName', 'emails', 'name']
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      try {
+        //console.log(profile);
+        
+        let user = await User.findOne({ facebookID: profile.id });
+
+        if (user) {
+          return cb(null, user);
+        } else {
+          const email = profile.emails && profile.emails[0] ? profile.emails[0].value : '';
+          const name = profile.name.givenName || profile.displayName || "";
+
+          const newUser = new User({
+            username: profile.id,
+            name: name,
+            email: email,
+            level: "normal",
+            dateCreated: new Date().toISOString().substring(0, 10),
+            lastAccess: "",
+            facebookID: profile.id,
+          });
+
+          try {
+            const createdUser = await User.create(newUser);
+            return cb(null, createdUser);
+          } catch (registrationError) {
+            console.error('Error creating new user:', registrationError);
+            return cb(registrationError);
+          }
+        }
+      } catch (error) {
+        return cb(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:7777/users/login/google/callback",
+      profileFields: ['id', 'displayName', 'emails', 'name']
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+      try {
+        //console.log(profile);
+        
+        let user = await User.findOne({ googleID: profile.id });
+
+        if (user) {
+          return cb(null, user);
+        } else {
+          const email = profile.emails && profile.emails[0] ? profile.emails[0].value : '';
+          const name = profile.name.givenName || profile.displayName || "";
+
+          const newUser = new User({
+            username: profile.id,
+            name: name,
+            email: email,
+            level: "normal",
+            dateCreated: new Date().toISOString().substring(0, 10),
+            lastAccess: "",
+            googleID: profile.id,
+          });
+
+          try {
+            const createdUser = await User.create(newUser);
+            return cb(null, createdUser);
+          } catch (registrationError) {
+            console.error('Error creating new user:', registrationError);
+            return cb(registrationError);
+          }
+        }
+      } catch (error) {
+        return cb(error);
+      }
+    }
+  )
+);
 
 
 var usersRouter = require('./routes/users');
