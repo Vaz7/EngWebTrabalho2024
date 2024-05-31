@@ -1,0 +1,30 @@
+services:
+  mongodb_container:
+    image: mongo:latest
+    container_name: mongodb_container
+    volumes:
+      - ./dump:/dump
+      - ./scripts:/scripts
+    command: ["bash", "-c", "mongod --bind_ip_all --fork --logpath /var/log/mongodb.log && /scripts/restoreMongo.sh && tail -f /dev/null"]
+    ports:
+      - "27017:27017"
+    networks:
+      - acordaosnet
+
+  acordaosauth:
+    build: ./Auth
+    container_name: acordaosauth
+    environment:
+      - MONGODB_URL=mongodb://mongodb_container:27017/acordaos
+    depends_on:
+      - mongodb_container
+    restart: always
+    ports:
+      - "7777:7777"
+    networks:
+      - acordaosnet
+
+networks:
+  acordaosnet:
+    name: acordaosnet
+    driver: bridge

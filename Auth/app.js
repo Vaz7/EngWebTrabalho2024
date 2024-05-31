@@ -12,7 +12,7 @@ require("dotenv").config();
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 
-var mongoDB = 'mongodb://127.0.0.1/acordaos'
+var mongoDB = process.env.MONGODB_URL || 'mongodb://127.0.0.1/acordaos';
 
 mongoose.connect(mongoDB)
 var db = mongoose.connection
