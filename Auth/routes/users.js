@@ -245,4 +245,33 @@ router.post('/registaradmin', auth.verificaAdmin,  function (req, res) {
         }
     )
 })
+
+
+router.post('/:id/favoritos', auth.verificaAcesso, async function(req, res) {
+  const userId = req.params.id;
+  const favorito = req.body;
+
+  try {
+    const user = await User.addToFavoritos(userId, favorito);
+    res.jsonp(user);
+  } catch (erro) {
+    res.status(500).jsonp(erro.message);
+  }
+});
+
+
+router.delete('/:id/favoritos/:favoritoId', auth.verificaAcesso, async function(req, res) {
+  const userId = req.params.id;
+  const favoritoId = req.params.favoritoId;
+
+  try {
+    const user = await User.removeFromFavoritos(userId, favoritoId);
+    res.jsonp(user);
+  } catch (erro) {
+    res.status(500).jsonp(erro.message);
+  }
+});
+
+
+
 module.exports = router;

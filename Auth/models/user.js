@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 var passportLocalMongoose = require('passport-local-mongoose');
 
-var userSchema = new mongoose.Schema({
+var favoritoSchema = new mongoose.Schema({
+    _id: String,
+    comment: String
+  }, { _id: false });
+  
+  var userSchema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
@@ -10,8 +15,9 @@ var userSchema = new mongoose.Schema({
     dateCreated: String,
     lastAccess: String,
     facebookID: String,
-    googleID: String
-}, { versionKey: false });
+    googleID: String,
+    favoritos: [favoritoSchema]
+  }, { versionKey: false });
 
 userSchema.plugin(passportLocalMongoose, {usernameField: 'email'});
 

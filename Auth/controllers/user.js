@@ -40,3 +40,39 @@ module.exports.deleteUser = id => {
             throw erro
         })
 }
+
+module.exports.addToFavoritos = async (userId, favorito) => {
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        const existingFavorito = user.favoritos.find(f => f._id === favorito._id);
+        if (!existingFavorito) {
+          user.favoritos.push(favorito);
+          await user.save();
+        }
+        return user;
+      } else {
+        throw new Error('User not found');
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+  
+  module.exports.removeFromFavoritos = async (userId, favoritoId) => {
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        const index = user.favoritos.findIndex(f => f._id === favoritoId);
+        if (index > -1) {
+          user.favoritos.splice(index, 1);
+          await user.save();
+        }
+        return user;
+      } else {
+        throw new Error('User not found');
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
