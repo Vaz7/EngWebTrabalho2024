@@ -13,6 +13,21 @@ router.get('/search', auth.verificaAcesso, function(req, res) {
     .catch(erro => res.jsonp(erro));
 });
 
+router.get('/count', auth.verificaAcesso, async function(req, res, next) {
+  const query = {
+    Tribunal: req.query.Tribunal,
+    Autor: req.query.Autor,
+    Magistrado: req.query.Magistrado
+  };
+
+  try {
+    const total = await Acordao.count(query);
+    res.json({ total });
+  } catch (error) {
+    res.status(500).jsonp(error.message);
+  }
+});
+
 
 router.get('/:id', auth.verificaAcesso, function(req, res) {
   Acordao.findById(req.params.id)

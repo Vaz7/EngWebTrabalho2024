@@ -27,6 +27,7 @@ module.exports.search = (query, page, limit) => {
     .find(searchQuery)
     .skip(skip)
     .limit(limit)
+    .lean() // para performance do que li
     .exec();
 };
 
@@ -41,3 +42,20 @@ module.exports.update = (id, comp) => {
 module.exports.removeById = id => {
   return Acordao.findByIdAndDelete({ _id: id });
 }
+
+module.exports.count = (query = {}) => {
+  const { Tribunal, Autor, Magistrado } = query;
+
+  let searchQuery = {};
+  if (Tribunal) {
+    searchQuery.Tribunal = Tribunal;
+  }
+  if (Autor) {
+    searchQuery.Autor = Autor;
+  }
+  if (Magistrado) {
+    searchQuery.Magistrado = Magistrado;
+  }
+
+  return Acordao.countDocuments(searchQuery).exec();
+};

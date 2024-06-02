@@ -68,6 +68,54 @@ router.post('/registar', async function(req, res, next) {
   }
 });
 
+router.get('/acordaos', Auth.verificaAutenticacao, async function(req, res, next) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 25;
+  const query = req.query.query || '';
+
+  try {
+    const response = await axios.get(`http://localhost:5555/acordaos/search`, {
+      params: { 
+        ...req.query, 
+        page: page, 
+        limit: limit, 
+        token: token 
+      }
+    });
+
+    const totalResponse = await axios.get(`http://localhost:5555/acordaos/count`, {
+      params: { 
+        token: token,
+        query: query 
+      }
+    });
+
+    const tribunaisResponse = await axios.get('http://localhost:5555/tribunais', {
+      params: { token: token }
+    });
+
+    res.render('acordaos', {
+      acordaos: response.data,
+      total: totalResponse.data.total,
+      page: page,
+      limit: limit,
+      tribunais: tribunaisResponse.data,
+      userId: req.cookies.userId,
+      token: token,
+      query: query
+    });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data');
+  }
+});
 
 
 router.get('/acordaos/:id', Auth.verificaAutenticacao, async function(req, res, next) {
