@@ -3,25 +3,25 @@
         "_id": 0,
         "Nome": "Tribunal do Recurso",
         "NomeFixed": "TribunalRecurso",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 1,
         "Nome": "Data",
         "NomeFixed": "Data",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 2,
         "Nome": "Nº do Documento",
         "NomeFixed": "NDocumento",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 3,
         "Nome": "url",
         "NomeFixed": "url",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 4,
@@ -33,55 +33,55 @@
         "_id": 5,
         "Nome": "Jurisprudência Internacional",
         "NomeFixed": "JurisprudenciaInternacional",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 6,
         "Nome": "Jurisprudência Nacional",
         "NomeFixed": "JurisprudenciaNacional",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 7,
         "Nome": "Jurisprudência Estrangeira",
         "NomeFixed": "JurisprudenciaEstrangeira",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 8,
         "Nome": "Jurisprudência Constitucional",
         "NomeFixed": "JurisprudenciaConstitucional",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 9,
         "Nome": "Nº Convencional",
         "NomeFixed": "NConvencional",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 10,
         "Nome": "Legislação Estrangeira",
         "NomeFixed": "LegislacaoEstrangeira",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 11,
         "Nome": "Área Temática",
         "NomeFixed": "AreaTematica",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 12,
         "Nome": "Texto Integral",
         "NomeFixed": "TextoIntegral",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 13,
         "Nome": "Meio Processual",
         "NomeFixed": "MeioProcessual",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 14,
@@ -93,19 +93,19 @@
         "_id": 15,
         "Nome": "Votação",
         "NomeFixed": "Votacao",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 16,
         "Nome": "Referência Publicação",
         "NomeFixed": "ReferenciaPublicacao",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 17,
         "Nome": "Indicações Eventuais",
         "NomeFixed": "IndicacoesEventuais",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 18,
@@ -123,25 +123,25 @@
         "_id": 20,
         "Nome": "Legislação Comunitária",
         "NomeFixed": "LegislacaoComunitaria",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 21,
         "Nome": "Sumário",
         "NomeFixed": "Sumario",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 22,
         "Nome": "Legislação Nacional",
         "NomeFixed": "LegislacaoNacional",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 23,
         "Nome": "Privacidade",
         "NomeFixed": "Privacidade",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 24,
@@ -153,144 +153,144 @@
         "_id": 25,
         "Nome": "Decisão",
         "NomeFixed": "Decisao",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 26,
         "Nome": "Processo no Tribunal de Recurso",
         "NomeFixed": "ProcessoTribunalRecurso",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 27,
         "Nome": "Requerido",
         "NomeFixed": "Requerido",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 28,
         "Nome": "Área Temática 1",
         "NomeFixed": "AreaTematica1",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 29,
         "Nome": "Área Temática 2",
         "NomeFixed": "AreaTematica2",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 30,
         "Nome": "Referências Internacionais",
         "NomeFixed": "ReferenciasInternacionais",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 31,
         "Nome": "Requerente",
         "NomeFixed": "Requerente",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 32,
         "Nome": "Acordão",
         "NomeFixed": "Acordao",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 33,
         "Nome": "Outra Jurisprudência",
         "NomeFixed": "OutraJurisprudencia",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 34,
         "Nome": "Referencia dos Pareceres",
         "NomeFixed": "ReferenciaPareceres",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 35,
         "Nome": "Apenso",
         "NomeFixed": "Apenso",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 36,
         "Nome": "Recurso",
         "NomeFixed": "Recurso",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 37,
         "Nome": "Reclamações",
         "NomeFixed": "Reclamacoes",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 38,
         "Nome": "Referência da Publicação",
         "NomeFixed": "ReferenciaPublicação",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 39,
         "Nome": "Objecto",
         "NomeFixed": "Objecto",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 40,
         "Nome": "Apêndice",
         "NomeFixed": "Apendice",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 41,
         "Nome": "Relator",
         "NomeFixed": "Relator",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 42,
         "Nome": "Recusa Aplicação",
         "NomeFixed": "RecusaAplicacao",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 43,
         "Nome": "Data de Entrada",
         "NomeFixed": "DataEntrada",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 44,
         "Nome": "Autor",
         "NomeFixed": "Autor",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 45,
         "Nome": "Réu",
         "NomeFixed": "Reu",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 46,
         "Nome": "Tema",
         "NomeFixed": "Tema",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 47,
         "Nome": "Referencia do Processo",
         "NomeFixed": "ReferenciaProcesso",
-        "Prioridade": true
+        "Prioridade": false
     },
     {
         "_id": 48,
         "Nome": "Doutrina",
         "NomeFixed": "Doutrina",
-        "Prioridade": true
+        "Prioridade": false
     }
 ]

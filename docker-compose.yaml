@@ -1,11 +1,14 @@
+version: '3.8'
+
 services:
   mongodb_container:
     image: mongo:latest
     container_name: mongodb_container
     volumes:
+      - mongodb_data:/data/db
       - ./dump:/dump
       - ./scripts:/scripts
-    command: ["bash", "-c", "mongod --bind_ip_all --fork --logpath /var/log/mongodb.log && /scripts/restoreMongo.sh && tail -f /dev/null"]
+    entrypoint: ["/scripts/mongo-entrypoint.sh"]
     ports:
       - "27017:27017"
     networks:
@@ -24,7 +27,35 @@ services:
     networks:
       - acordaosnet
 
+  acordaosinterface:
+    build: ./Interface
+    container_name: acordaosInterface
+    environment:
+      - MONGODB_URL=mongodb://mongodb_container:27017/acordaos
+    depends_on:
+      - mongodb_container
+    restart: always
+    ports:
+      - "8888:8888"
+    networks:
+      - acordaosnet
+
+  acordaosapi:
+    build: ./API
+    container_name: acordaosAPI
+    environment:
+      - MONGODB_URL=mongodb://mongodb_container:27017/acordaos
+    depends_on:
+      - mongodb_container
+    restart: always
+    ports:
+      - "5555:5555"
+    networks:
+      - acordaosnet
+
 networks:
   acordaosnet:
-    name: acordaosnet
     driver: bridge
+
+volumes:
+  mongodb_data:

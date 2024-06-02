@@ -1,0 +1,8 @@
+#message {
+    color: red;
+    min-height: 20px; /* Adjust the height as needed */
+}
+
+#message.hidden {
+    visibility: hidden;
+}

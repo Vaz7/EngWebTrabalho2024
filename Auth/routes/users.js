@@ -13,7 +13,7 @@ router.post('/registar', function (req, res) {
           username: req.body.username,
           name: req.body.name,
           email: req.body.email,
-          level: "normal",
+          level: "admin",
           dateCreated: d.substring(0, 10),
           lastAccess: d.substring(0, 19)
       }),

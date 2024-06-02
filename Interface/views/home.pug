@@ -1,0 +1,6 @@
+extends layout
+
+block content
+    p #{texto}
+    form(action="/logout" method="get")
+        button(type="submit") Logout

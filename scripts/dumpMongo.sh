@@ -1,13 +1,11 @@
 #!/bin/bash
 
 # Ensure the dump directory exists one level up from the current directory
-mkdir -p ../dump
+mkdir -p ../dump/acordaos
 
-# Perform the dump inside the container
-docker exec mongoEW sh -c "mongodump --db acordaos --out /dump"
-
-# Copy the dump from the container to the host
-docker cp mongoEW:/dump/acordaos ../dump
+# Run the mongodump command inside the container with a bind mount to the host directory
+docker run --rm -v $(pwd)/../dump:/dump --network container:mongodb_container mongo \
+    sh -c "mongodump --db acordaos --out /dump"
 
 # Navigate to the database dump directory
 cd ../dump/acordaos

@@ -8,7 +8,7 @@ var camposRouter = require('./routes/campos');
 
 var mongoose = require("mongoose");
 
-var mongoDB = "mongodb://127.0.0.1/acordaos";
+var mongoDB = process.env.MONGODB_URL || 'mongodb://127.0.0.1/acordaos';
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "Erro de conexão ao MongoDB"));
