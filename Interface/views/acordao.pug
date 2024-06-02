@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    title Acordão
+    link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
+  body(class="w3-container")
+    h1(class="w3-center") Acordão
+    .w3-card-4
+      .w3-container.w3-teal
+        h2 #{acordao.Processo}
+
+      .w3-container
+        ul
+          each campo in campos
+            - const isMatchingField = acordao.hasOwnProperty(campo.NomeFixed)
+            if isMatchingField
+              li
+                strong #{campo.Nome}:
+                if campo.Nome == 'Tribunal'
+                  - const tribunal = tribunais.find(t => t._id === acordao[campo.NomeFixed])
+                  | #{tribunal ? tribunal.name : acordao[campo.NomeFixed]}
+                else
+                  | #{acordao[campo.NomeFixed]}
+
+    .w3-container.w3-center
+      if !favourites.some(fav => fav._id === acordao._id)
+        button.w3-button.w3-green(type="button", onclick="document.getElementById('addFavModal').style.display='block'") Add to Favorites
+      else
+        form(action=`/users/${userId}/favoritos/${acordao._id}/delete`, method="post")
+          input(type="hidden", name="_method", value="delete")
+          button.w3-button.w3-red(type="submit") Remove from Favorites
+
+    // Modal for adding to favorites
+    .w3-modal(id="addFavModal")
+      .w3-modal-content
+        .w3-container
+          span.w3-button.w3-display-topright(onclick="document.getElementById('addFavModal').style.display='none'") &times;
+          h2 Add to Favorites
+          form(action=`/users/${userId}/favoritos`, method="post")
+            input(type="hidden", name="favorito", value=acordao._id)
+            p
+              label(for="comment") Comment:
+              textarea.w3-input(name="comment")
+            button.w3-button.w3-green(type="submit") Submit
+
+    script.
+      // Close the modal when clicking outside of it
+      window.onclick = function(event) {
+        if (event.target == document.getElementById('addFavModal')) {
+          document.getElementById('addFavModal').style.display = 'none';
+        }
+      };

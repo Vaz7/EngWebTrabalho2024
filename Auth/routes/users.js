@@ -152,6 +152,18 @@ router.get('/:id', auth.verificaAcesso, function (req, res) {
 })
 
 
+router.get('/:id/favoritos', auth.verificaAcesso, async function(req, res) {
+  const userId = req.params.id;
+
+  try {
+    const favoritos = await User.getFavoritos(userId);
+    res.jsonp(favoritos);
+  } catch (erro) {
+    res.status(500).jsonp(erro.message);
+  }
+});
+
+
 router.post('/login', passport.authenticate('local'), function (req, res) {
     jwt.sign({
             _id: req.user._id, username: req.user.username, email: req.user.email, level: req.user.level
@@ -249,7 +261,7 @@ router.post('/registaradmin', auth.verificaAdmin,  function (req, res) {
 
 router.post('/:id/favoritos', auth.verificaAcesso, async function(req, res) {
   const userId = req.params.id;
-  const favorito = req.body;
+  const favorito = req.body
 
   try {
     const user = await User.addToFavoritos(userId, favorito);
@@ -271,6 +283,10 @@ router.delete('/:id/favoritos/:favoritoId', auth.verificaAcesso, async function(
     res.status(500).jsonp(erro.message);
   }
 });
+
+
+
+module.exports = router;
 
 
 
