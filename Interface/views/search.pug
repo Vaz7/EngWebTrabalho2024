@@ -1,20 +1,19 @@
 extends layout
 
 block content
-  link(rel='stylesheet', href='/stylesheets/searchAcordao.css')
   body
-  .w3-bar.w3-pink
-    a.w3-bar-item.w3-button(href="/home") Home
-    a.w3-bar-item.w3-button(href="/tribunais") Tribunais
-    a.w3-bar-item.w3-button(href="/taxonomia") Taxonomia
-    a.w3-bar-item.w3-button(href="/favoritos") Favoritos
-    a.w3-bar-item.w3-button(href="/perfil") Perfil
-    a.w3-bar-item.w3-button.w3-gray(href="/search") Search
-    a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
-    
-    if canAddAcordao
-      a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
-      a.w3-bar-item.w3-button(href="/registar/users") Consultar Utilizadores
+    .w3-bar.w3-pink
+      a.w3-bar-item.w3-button(href="/home") Home
+      a.w3-bar-item.w3-button(href="/tribunais") Tribunais
+      a.w3-bar-item.w3-button(href="/taxonomia") Taxonomia
+      a.w3-bar-item.w3-button(href="/favoritos") Favoritos
+      a.w3-bar-item.w3-button(href="/perfil") Perfil
+      a.w3-bar-item.w3-button.w3-gray(href="/search") Search
+      a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+      
+      if isAdmin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/users") Consultar Utilizadores
     
 
   .w3-container.w3-padding
@@ -56,7 +55,7 @@ block content
             th Descritores
             th Data
             th Details
-            if canAddAcordao
+            if isAdmin
               th Remover
               th Editar
         tbody
@@ -69,7 +68,7 @@ block content
               td= result.DataAcordao
               td
                 a.w3-button.w3-blue(href=`/acordaos/${result._id}`) View
-              if canAddAcordao 
+              if isAdmin 
                 td
                   a.w3-button.w3-red(href=`/acordaos/remover/${result._id}`) Remover
                 td

@@ -473,14 +473,15 @@ router.post('/search', Auth.verificaAutenticacao, async function(req, res, next)
         token
       }
     });
-    const canAddAcordao = req.isAdmin;
+    const isAdmin = req.isAdmin;
     res.render('search', {
       results: response.data,
       page,
       limit,
+      isAdmin,
       total: totalResponse.data.total,
-      query: { Autor, Tribunal, Magistrado },
-      canAddAcordao
+      query: { Autor, Tribunal, Magistrado }
+      
     });
   } catch (error) {
     console.error('Error fetching search results:', error.response ? error.response.data : error.message);
@@ -504,12 +505,13 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 25;
-
+  const isAdmin = req.isAdmin;
   if (!Autor && !Tribunal && !Magistrado) {
     // Render the form with empty search results when no search parameters are provided
     res.render('search', {
       results: [],
       page: pageNumber,
+      isAdmin,
       limit: limitNumber,
       total: 0,
       query: {}
