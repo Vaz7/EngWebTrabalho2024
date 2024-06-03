@@ -1,0 +1,9 @@
+.remove-btn {
+    height: 40px; /* Set this value to match the height of the input fields */
+    line-height: 40px; /* Center the text vertically */
+    padding: 0; /* Remove any padding */
+    font-size: 15px;
+  }
+  .form-container {
+    margin-top: 10%; /* Adjust the value as needed to pull the form down */
+  }

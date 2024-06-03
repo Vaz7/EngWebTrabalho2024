@@ -1,20 +1,25 @@
 doctype html
 html
   head
-    title Acordaos
+    title Acordãos
     link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
   body
-    .w3-bar.w3-teal
-      a.w3-bar-item.w3-button.w3-gray(href="/") Home
+    .w3-bar.w3-pink
+      a.w3-bar-item.w3-button.w3-gray(href="/home") Home
       a.w3-bar-item.w3-button(href="/tribunais") Tribunais
       a.w3-bar-item.w3-button(href="/taxonomia") Taxonomia
       a.w3-bar-item.w3-button(href="/favoritos") Favoritos
       a.w3-bar-item.w3-button(href="/perfil") Perfil
       a.w3-bar-item.w3-button(href="/search") Search
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
-
+      if canAddAcordao
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/users") Consultar Utilizadores
     .w3-container
-      h2 Acordaos
+      h2 Acordãos
+        if canAddAcordao
+          a.w3-button.w3-pink(href=`/acordaos/adicionar`, style="font-size: 15px; margin-left: 30px; padding: 5px 10px;") Adicionar acordão
+
 
       table.w3-table-all
         thead
@@ -25,6 +30,9 @@ html
             th Descritores
             th Data
             th Details
+            if canAddAcordao
+              th Remover
+              th Editar
         tbody
           each acordao in acordaos
             tr
@@ -36,6 +44,11 @@ html
               td= acordao.DataAcordao
               td
                 a.w3-button.w3-blue(href=`/acordaos/${acordao._id}`) View
+              if canAddAcordao 
+                td
+                  a.w3-button.w3-red(href=`/acordaos/remover/${acordao._id}`) Remover
+                td
+                  a.w3-button.w3-pink(href=`/acordaos/editar/${acordao._id}`) Editar
 
     // Pagination
     .w3-center
@@ -51,7 +64,7 @@ html
           - const endPage = Math.min(totalPages, page + 2)
           each num in [...Array(endPage - startPage + 1).keys()].map(n => n + startPage)
             if num === page
-              a.w3-button.w3-teal= num
+              a.w3-button.w3-pink= num
             else
               a.w3-button(href=`?page=${num}&limit=${limit}`)= num
 
@@ -59,7 +72,7 @@ html
             span.w3-button.w3-hover-none(...) ... 
 
           if endPage < totalPages
-            form(action="/acordaos", method="get", class="w3-inline w3-container w3-center", style="display: inline-block; margin: 0; padding: 0; width: auto;")
+            form(action="/home", method="get", class="w3-inline w3-container w3-center", style="display: inline-block; margin: 0; padding: 0; width: auto;")
               input.w3-input(type="number", name="page", min="1", max=totalPages, placeholder="Page", style="width: 70px; display: inline-block;")
               input(type="hidden", name="limit", value=limit)
               button.w3-button.w3-green(type="submit", style="display: inline-block; padding: 6px 12px;") Go

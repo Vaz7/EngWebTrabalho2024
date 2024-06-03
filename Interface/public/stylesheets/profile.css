@@ -1,0 +1,8 @@
+#message {
+    color: red;
+    
+}
+
+#message.hidden {
+    visibility: hidden;
+}

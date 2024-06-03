@@ -13,7 +13,7 @@ router.post('/registar', function (req, res) {
           username: req.body.username,
           name: req.body.name,
           email: req.body.email,
-          level: "admin",
+          level: "normal",
           dateCreated: d.substring(0, 10),
           lastAccess: d.substring(0, 19)
       }),
@@ -182,48 +182,58 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 
 
 router.put('/:id', auth.verificaAcesso, async function (req, res) {
-    if (req.idUtilizador === req.params.id) {
-        try {
-            const updateData = { ...req.body };
-            const user = await User.getUser(req.params.id);
-            if (!user) {
-                return res.status(404).jsonp({ error: "User not found" });
-            }
+  if (req.idUtilizador === req.params.id) {
+      try {
+          const updateData = { ...req.body };
+          const user = await User.getUser(req.params.id);
+          if (!user) {
+              return res.status(404).jsonp({ error: "User not found" });
+          }
 
-            // Check if password is being updated
-            if (updateData.password) {
-                await user.setPassword(updateData.password);
-                delete updateData.password; // Remove password from updateData to prevent plain text password saving
-                await user.save(); // Save the user to persist the new password hash
-            }
+          // Check if email is being updated and if it already exists
+          if (updateData.email && updateData.email !== user.email) {
+              const existingUser = await User.findOneByEmail(updateData.email);
+              if (existingUser) {
+                  return res.status(409).jsonp({ error: "Email already in use!" });
+              }
+          }
 
-            // Update other fields
-            for (let key in updateData) {
-                if (updateData.hasOwnProperty(key)) {
-                    user[key] = updateData[key];
-                }
-            }
+          // Check if password is being updated
+          if (updateData.password) {
+              await user.setPassword(updateData.password);
+              delete updateData.password; // Remove password from updateData to prevent plain text password saving
+              await user.save(); // Save the user to persist the new password hash
+          }
 
-            const updatedUser = await user.save(); // Save the user to persist other updates
+          // Update other fields
+          for (let key in updateData) {
+              if (updateData.hasOwnProperty(key)) {
+                  user[key] = updateData[key];
+              }
+          }
 
-            // Prepare response with only the desired fields
-            const responseUser = {
-                username: updatedUser.username,
-                email: updatedUser.email,
-                name: updatedUser.name,
-                dateCreated: updatedUser.dateCreated,
-                lastAccess: updatedUser.lastAccess
-            };
+          const updatedUser = await user.save(); // Save the user to persist other updates
 
-            res.jsonp(responseUser);
-        } catch (error) {
-            console.error("Error updating user:", error);
-            res.status(409).jsonp({ error: error.message });
-        }
-    } else {
-        res.status(403).jsonp({ error: `O user ${req.user.username} não têm permissões para alterar os dados do perfil.` });
-    }
+          // Prepare response with only the desired fields
+          const responseUser = {
+              username: updatedUser.username,
+              email: updatedUser.email,
+              name: updatedUser.name,
+              dateCreated: updatedUser.dateCreated,
+              lastAccess: updatedUser.lastAccess
+          };
+
+          res.jsonp(responseUser);
+      } catch (error) {
+          console.error("Error updating user:", error);
+          res.status(409).jsonp({ error: error.message });
+      }
+  } else {
+      res.status(403).jsonp({ error: `O user ${req.user.username} não têm permissões para alterar os dados do perfil.` });
+  }
 });
+
+
 
 
 router.delete('/:id', auth.verificaAcesso, function (req, res) {

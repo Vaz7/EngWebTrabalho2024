@@ -1,4 +1,4 @@
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 module.exports.verificaAutenticacao = (req, res, next) => {
     let token = req.cookies.token;

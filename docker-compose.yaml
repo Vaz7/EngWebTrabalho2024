@@ -32,6 +32,7 @@ services:
     container_name: acordaosInterface
     environment:
       - MONGODB_URL=mongodb://mongodb_container:27017/acordaos
+      - NODE_ENV=production
     depends_on:
       - mongodb_container
     restart: always

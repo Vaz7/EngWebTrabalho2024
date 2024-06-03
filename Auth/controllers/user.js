@@ -12,6 +12,17 @@ module.exports.getUser = id => {
         });
 };
 
+module.exports.findOneByEmail = email => {
+  return User.findOne({ email: email })
+    .then(resposta => {
+      return resposta;
+    })
+    .catch(erro => {
+      throw erro;
+    });
+};
+
+
 module.exports.atualizaUltimoAcesso = id => {
     let agora = new Date().toISOString().substring(0, 19)
     return User.updateOne({ _id: id }, { lastAccess: agora })

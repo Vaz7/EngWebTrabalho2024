@@ -1,0 +1,93 @@
+extends layout
+
+block content
+  link(rel='stylesheet', href='/stylesheets/addAcordao.css')
+
+  .w3-container.w3-padding
+    a.w3-button.w3-pink.w3-border(href="/home") ⬅ Voltar
+
+    h1.w3-center= title
+
+    form(action="/acordaos/adicionar" method="POST" class="w3-container w3-card-4 w3-padding w3-light-grey form-container")
+      fieldset.w3-padding
+        legend.w3-text-pink.w3-large Adicionar acordão
+
+        // Explicitly add the "Data do Acordão" field
+        .w3-row.w3-padding-16
+          label.w3-col.s3(for="DataAcordao") Data do Acordão
+          .w3-col.s9
+            input.w3-input.w3-border(type="date" name="DataAcordao" id="DataAcordao" required)
+
+        // Fields for Prioridade: true elements
+        each campo in camposPrioridadeTrue
+          // Avoid duplicate "Data do Acordão" field
+          if campo.NomeFixed.toLowerCase() != 'dataacordao'
+            .w3-row.w3-padding-16
+              label.w3-col.s3(for=campo.NomeFixed) #{campo.Nome}
+              .w3-col.s9
+                input.w3-input.w3-border(type="text" name=campo.NomeFixed id=campo.NomeFixed required)
+
+        // Placeholder for dynamically added fields
+        #additionalFields
+
+      .w3-row.w3-padding-16
+        label.w3-col.s3 Add Field
+        .w3-col.s9
+          select.w3-select.w3-border.w3-light-grey(id="addFieldDropdown")
+            option(value="" disabled selected) Select a field to add
+            each campo in camposPrioridadeFalse
+              option(value=campo.NomeFixed data-nome=campo.Nome) #{campo.Nome}
+
+      .w3-center
+        button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
+
+  script.
+    // JavaScript to handle adding and removing fields dynamically
+    document.getElementById('addFieldDropdown').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const fieldName = selectedOption.value;
+      const fieldLabel = selectedOption.getAttribute('data-nome');
+
+      if (fieldName) {
+        // Create a new row for the selected field
+        const newRow = document.createElement('div');
+        newRow.className = 'w3-row w3-padding-16 w3-margin-bottom';
+        
+        // Create the label element
+        const newLabel = document.createElement('label');
+        newLabel.className = 'w3-col s3';
+        newLabel.setAttribute('for', fieldName);
+        newLabel.textContent = fieldLabel;
+        
+        // Create the input element
+        const newInput = document.createElement('input');
+        newInput.className = 'w3-input w3-border w3-col s8';
+        if (fieldName.toLowerCase().includes('data')) {
+          newInput.setAttribute('type', 'date');
+        } else {
+          newInput.setAttribute('type', 'text');
+        }
+        newInput.setAttribute('name', fieldName);
+        newInput.setAttribute('id', fieldName);
+        
+        // Create the remove button
+        const removeButton = document.createElement('button');
+        removeButton.className = 'w3-button w3-red w3-col s1 remove-btn';
+        removeButton.innerHTML = 'Remover';
+        removeButton.type = 'button';
+        removeButton.onclick = function() {
+          newRow.remove();
+        };
+        
+        // Append label, input, and button to the new row
+        newRow.appendChild(newLabel);
+        newRow.appendChild(newInput);
+        newRow.appendChild(removeButton);
+        
+        // Append the new row to the additionalFields div
+        document.getElementById('additionalFields').appendChild(newRow);
+
+        // Reset the dropdown
+        this.value = '';
+      }
+    });

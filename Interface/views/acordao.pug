@@ -4,6 +4,9 @@ html
     title Acordão
     link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
   body(class="w3-container")
+    .w3-container.w3-padding
+    a.w3-button.w3-pink.w3-border(href="/home") ⬅ Voltar
+
     h1(class="w3-center") Acordão
     .w3-card-4
       .w3-container.w3-teal
@@ -29,6 +32,9 @@ html
         form(action=`/users/${userId}/favoritos/${acordao._id}/delete`, method="post")
           input(type="hidden", name="_method", value="delete")
           button.w3-button.w3-red(type="submit") Remove from Favorites
+      if isAdmin
+        a.w3-button.w3-red(href=`/acordaos/remover/${acordao._id}`) Remover acordão
+        a.w3-button.w3-pink(href=`/acordaos/editar/${acordao._id}`) Editar acordão
 
     // Modal for adding to favorites
     .w3-modal(id="addFavModal")

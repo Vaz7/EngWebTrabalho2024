@@ -1,0 +1,70 @@
+extends layout
+
+block content
+  link(rel='stylesheet', href='/stylesheets/profile.css')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+
+  body
+    .w3-bar.w3-pink
+      a.w3-bar-item.w3-button(href="/home") Home
+      a.w3-bar-item.w3-button(href="/tribunais") Tribunais
+      a.w3-bar-item.w3-button(href="/taxonomia") Taxonomia
+      a.w3-bar-item.w3-button(href="/favoritos") Favoritos
+      a.w3-bar-item.w3-button.w3-gray(href="/perfil") Perfil
+      a.w3-bar-item.w3-button(href="/search") Search
+      a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+      if isAdmin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/users") Consultar Utilizadores
+
+      
+      
+    if user && user.dados
+      form(action="/perfil" method="POST" class="w3-container w3-card-4 w3-padding w3-light-grey form-container")
+        fieldset.w3-padding
+          legend.w3-text-pink.w3-large Editar Perfil
+
+          // Fields for user profile elements
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="username") Username
+            .w3-col.s9
+              input.w3-input.w3-border(type="text" name="username" id="username" value=`${user.dados.username}` required)
+              if isAdmin
+                span.w3-margin
+                  i.fas.fa-user-shield.w3-text-red(title="Admin")
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="name") Name
+            .w3-col.s9
+              input.w3-input.w3-border(type="text" name="name" id="name" value=`${user.dados.name}` required)
+
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="email") Email
+            .w3-col.s9
+              input.w3-input.w3-border(type="email" name="email" id="email" value=`${user.dados.email}` required)
+            
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="password") Password
+            .w3-col.s9
+              input.w3-input.w3-border(type="password" name="password" placeholder="Leave empty to keep current password")
+
+          // Non-editable fields for dateCreated and lastAccess
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="dateCreated") Date Created
+            .w3-col.s9
+              input.w3-input.w3-border(type="text" name="dateCreated" id="dateCreated" value=`${user.dados.dateCreated}` readonly)
+
+          .w3-row.w3-padding-16
+            label.w3-col.s3(for="lastAccess") Last Access
+            .w3-col.s9
+              input.w3-input.w3-border(type="text" name="lastAccess" id="lastAccess" value=`${user.dados.lastAccess}` readonly)
+            
+          div(id="message" class=(error ? '' : 'hidden'))
+            if error
+                p= error
+            else
+                p 
+        .w3-center
+          button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
+    else
+      .w3-container
+        p User data not found.
