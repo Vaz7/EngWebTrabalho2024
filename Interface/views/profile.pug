@@ -15,7 +15,7 @@ block content
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
       if isAdmin
         a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
-        a.w3-bar-item.w3-button(href="/registar/users") Consultar Utilizadores
+        a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
 
       
       
@@ -57,7 +57,11 @@ block content
             label.w3-col.s3(for="lastAccess") Last Access
             .w3-col.s9
               input.w3-input.w3-border(type="text" name="lastAccess" id="lastAccess" value=`${user.dados.lastAccess}` readonly)
-            
+
+          .w3-row.w3-padding-16
+            .w3-col.s9
+              a.w3-bar-item.w3-button.w3-pink(href="/perfil/delete") Apagar conta
+
           div(id="message" class=(error ? '' : 'hidden'))
             if error
                 p= error
@@ -65,6 +69,10 @@ block content
                 p 
         .w3-center
           button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
+
     else
       .w3-container
         p User data not found.
+
+
+

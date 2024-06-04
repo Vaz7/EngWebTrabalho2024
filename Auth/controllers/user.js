@@ -100,3 +100,13 @@ module.exports.addToFavoritos = async (userId, favorito) => {
       throw new Error(error.message);
     }
   };
+  module.exports.getAllUsers = () => {
+    return User.find()
+        .select('-password') // Exclude the password field
+        .then(users => {
+            return users;
+        })
+        .catch(error => {
+            throw error;
+        });
+};

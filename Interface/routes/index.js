@@ -616,7 +616,74 @@ router.post('/perfil', Auth.verificaAutenticacao, async function(req, res, next)
   }
 });
 
+router.get('/perfil/delete', Auth.verificaAutenticacao, async function(req, res, next) {
+  const token = req.cookies.token;
+  const userId = req.cookies.userId;
 
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  try {
+    const response = await axios.delete(`http://localhost:7777/users/${userId}`, {
+      params: { token: token }
+    });
+
+    res.clearCookie('token');
+    res.clearCookie('userId');
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send('Error deleting user');
+  }
+});
+
+
+router.get('/users', Auth.verificaAdmin, async function(req, res, next) {
+  const token = req.cookies.token;
+  
+  try {
+    const response = await axios.get('http://localhost:7777/users', {
+      params: { token: token }
+    });
+
+    const users = response.data;
+
+    res.render('users', { users: users });
+  } catch (error) {
+    console.error('Error fetching users:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching users');
+  }
+});
+
+router.get('/users/remover/:id', Auth.verificaAdmin, async function(req, res, next) {
+  const token = req.cookies.token;
+  const userIdToDelete = req.params.id;
+  const loggedInUserId = req.cookies.userId;
+
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  try {
+    const response = await axios.delete(`http://localhost:7777/users/${userIdToDelete}`, {
+      params: { token: token }
+    });
+
+    if (userIdToDelete === loggedInUserId) {
+      res.clearCookie('token');
+      res.clearCookie('userId');
+      res.redirect('/login');
+    } else {
+      res.redirect('/users');
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send('Error deleting user');
+  }
+});
 
 
 module.exports = router;

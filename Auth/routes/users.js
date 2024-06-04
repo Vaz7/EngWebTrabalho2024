@@ -6,6 +6,19 @@ var auth = require('../auth/auth')
 var User = require('../controllers/user')
 var passport = require('passport')
 
+router.get('/', auth.verificaAdmin, async function(req, res) {
+  try {
+      const users = await User.getAllUsers();
+      res.status(200).jsonp(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).jsonp({ error: 'Error fetching users' });
+  }
+});
+
+module.exports = router;
+
+
 
 router.post('/registar', function (req, res) {
   var d = new Date().toISOString();
@@ -295,8 +308,6 @@ router.delete('/:id/favoritos/:favoritoId', auth.verificaAcesso, async function(
 });
 
 
-
-module.exports = router;
 
 
 
