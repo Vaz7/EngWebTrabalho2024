@@ -447,12 +447,13 @@ router.post('/search', Auth.verificaAutenticacao, async function(req, res, next)
     return res.status(401).send('Authentication token is missing.');
   }
 
-  const { Autor, Tribunal, Magistrado } = req.body;
+  const { Autor, Tribunal, Magistrado,Descritor } = req.body;
 
   const params = {};
   if (Autor && Autor.trim()) params.Autor = Autor.trim();
   if (Tribunal && Tribunal.trim()) params.Tribunal = Tribunal.trim();
   if (Magistrado && Magistrado.trim()) params.Magistrado = Magistrado.trim();
+  if (Descritor && Descritor.trim()) params.Descritor = Descritor.trim();
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 25;
@@ -480,7 +481,7 @@ router.post('/search', Auth.verificaAutenticacao, async function(req, res, next)
       limit,
       isAdmin,
       total: totalResponse.data.total,
-      query: { Autor, Tribunal, Magistrado }
+      query: { Autor, Tribunal, Magistrado,Descritor}
       
     });
   } catch (error) {
@@ -496,17 +497,18 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
     return res.status(401).send('Authentication token is missing.');
   }
 
-  const { Autor, Tribunal, Magistrado, page, limit } = req.query;
+  const { Autor, Tribunal, Magistrado,Descritor, page, limit } = req.query;
 
   const params = {};
   if (Autor && Autor.trim()) params.Autor = Autor.trim();
   if (Tribunal && Tribunal.trim()) params.Tribunal = Tribunal.trim();
   if (Magistrado && Magistrado.trim()) params.Magistrado = Magistrado.trim();
+  if (Descritor && Descritor.trim()) params.Descritor = Descritor.trim();
 
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 25;
   const isAdmin = req.isAdmin;
-  if (!Autor && !Tribunal && !Magistrado) {
+  if (!Autor && !Tribunal && !Magistrado && !Descritor) {
     // Render the form with empty search results when no search parameters are provided
     res.render('search', {
       results: [],
@@ -542,7 +544,7 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
       page: pageNumber,
       limit: limitNumber,
       total: totalResponse.data.total,
-      query: { Autor, Tribunal, Magistrado },
+      query: { Autor, Tribunal, Magistrado,Descritor },
       canAddAcordao
     });
   } catch (error) {
@@ -682,6 +684,29 @@ router.get('/users/remover/:id', Auth.verificaAdmin, async function(req, res, ne
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).send('Error deleting user');
+  }
+});
+
+router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, next) {
+  const isAdmin = req.isAdmin;
+  const token = req.cookies.token;
+
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  try {
+    const response = await axios.get('http://localhost:5555/acordaos/descritores', {
+      params: { token: token }
+    });
+
+    let descritores = response.data;
+
+    res.render('taxonomia', { isAdmin, descritores });
+  } catch (error) {
+    console.error('Error fetching descritores:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching descritores');
   }
 });
 

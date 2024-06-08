@@ -3,6 +3,14 @@ var router = express.Router();
 const Acordao = require('../controllers/acordao');
 var auth = require('../auth/auth');
 
+router.get('/descritores', auth.verificaAcesso, async function(req, res) {
+  try {
+    const descritores = await Acordao.getUniqueDescritores();
+    res.json(descritores);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 
 router.get('/search', auth.verificaAcesso, function(req, res) {
   const page = parseInt(req.query.page) || 1;
@@ -17,7 +25,8 @@ router.get('/count', auth.verificaAcesso, async function(req, res, next) {
   const query = {
     Tribunal: req.query.Tribunal,
     Autor: req.query.Autor,
-    Magistrado: req.query.Magistrado
+    Magistrado: req.query.Magistrado,
+    Descritor: req.query.Descritor 
   };
 
   try {
@@ -52,6 +61,8 @@ router.delete('/:id', auth.verificaAdmin, function(req, res) {
       .then(data => res.jsonp(data))
       .catch(erro => res.jsonp(erro))
 });
+
+
 
 
 module.exports = router;

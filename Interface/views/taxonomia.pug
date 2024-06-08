@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  body
+    .w3-bar.w3-pink
+      a.w3-bar-item.w3-button(href="/home") Home
+      a.w3-bar-item.w3-button(href="/tribunais") Tribunais
+      a.w3-bar-item.w3-button.w3-gray(href="/taxonomia") Taxonomia
+      a.w3-bar-item.w3-button(href="/favoritos") Favoritos
+      a.w3-bar-item.w3-button(href="/perfil") Perfil
+      a.w3-bar-item.w3-button(href="/search") Search
+      a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+      
+      if isAdmin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
+
+    .w3-container
+      h2 Descritores
+      if descritores.length
+        ul
+          each descritor in descritores.filter(descritor => descritor.trim()).sort((a, b) => a.localeCompare(b))
+            li
+              a(href=`/search?descritor=${encodeURIComponent(descritor)}`)= descritor
+      else
+        p No descritores available.

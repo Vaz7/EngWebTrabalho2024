@@ -10,14 +10,13 @@ block content
       a.w3-bar-item.w3-button(href="/perfil") Perfil
       a.w3-bar-item.w3-button.w3-gray(href="/search") Search
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
-      
+
       if isAdmin
         a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
         a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
-    
 
   .w3-container.w3-padding
-    form(action="/search" method="POST" class="w3-container w3-card-4 w3-padding w3-light-grey form-container")
+    form(action="/search" method="GET" class="w3-container w3-card-4 w3-padding w3-light-grey form-container")
       fieldset.w3-padding
         legend.w3-text-pink.w3-large Pesquisar Acordão
 
@@ -37,13 +36,18 @@ block content
           .w3-col.s9
             input.w3-input.w3-border(type="text" name="Magistrado" id="Magistrado" value=(query && query.Magistrado ? query.Magistrado : ''))
 
+        .w3-row.w3-padding-16
+          label.w3-col.s3(for="Descritor") Descritor
+          .w3-col.s9
+            input.w3-input.w3-border(type="text" name="Descritor" id="Descritor" value=(query && query.Descritor ? query.Descritor : ''))
+
         input(type="hidden", name="page", value=page || 1)
         input(type="hidden", name="limit", value=limit || 25)
 
       .w3-center
         button.w3-button.w3-pink.w3-margin-top(type="submit") Pesquisar
 
-  if results && results.length >0
+  if results && results.length > 0
     .w3-container.w3-padding
       h2 Resultados da Pesquisa
       table.w3-table-all
@@ -102,6 +106,7 @@ block content
               input(type="hidden", name="Autor", value=query && query.Autor ? query.Autor : '')
               input(type="hidden", name="Tribunal", value=query && query.Tribunal ? query.Tribunal : '')
               input(type="hidden", name="Magistrado", value=query && query.Magistrado ? query.Magistrado : '')
+              input(type="hidden", name="Descritor", value=query && query.Descritor ? query.Descritor : '')
               button.w3-button.w3-green(type="submit", style="display: inline-block; padding: 6px 12px;") Go
 
           if endPage < totalPages

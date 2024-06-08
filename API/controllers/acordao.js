@@ -1,14 +1,11 @@
 const Acordao = require('../models/acordao');
 
-
 module.exports.findById = id => {
-  return Acordao
-    .findOne({ _id: id })
-    .exec();
+  return Acordao.findOne({ _id: id }).exec();
 }
 
 module.exports.search = (query, page, limit) => {
-  const { Tribunal, Autor, Magistrado } = query;
+  const { Tribunal, Autor, Magistrado, Descritor } = query;
 
   let searchQuery = {};
   if (Tribunal) {
@@ -19,6 +16,9 @@ module.exports.search = (query, page, limit) => {
   }
   if (Magistrado) {
     searchQuery.Magistrado = Magistrado;
+  }
+  if (Descritor) {
+    searchQuery.Descritores = { $elemMatch: { $regex: new RegExp(Descritor, 'i') } }; // Handle array field
   }
 
   const skip = (page - 1) * limit;
@@ -27,7 +27,7 @@ module.exports.search = (query, page, limit) => {
     .find(searchQuery)
     .skip(skip)
     .limit(limit)
-    .lean() // para performance do que li
+    .lean()
     .exec();
 };
 
@@ -36,7 +36,7 @@ module.exports.insert = acordao => {
 }
 
 module.exports.update = (id, comp) => {
-  return Acordao.updateOne({_id : id}, comp)
+  return Acordao.updateOne({ _id: id }, comp);
 }
 
 module.exports.removeById = id => {
@@ -44,7 +44,7 @@ module.exports.removeById = id => {
 }
 
 module.exports.count = (query = {}) => {
-  const { Tribunal, Autor, Magistrado } = query;
+  const { Tribunal, Autor, Magistrado, Descritor } = query;
 
   let searchQuery = {};
   if (Tribunal) {
@@ -56,6 +56,14 @@ module.exports.count = (query = {}) => {
   if (Magistrado) {
     searchQuery.Magistrado = Magistrado;
   }
+  if (Descritor) {
+    searchQuery.Descritores = { $elemMatch: { $regex: new RegExp(Descritor, 'i') } }; // Handle array field
+  }
 
   return Acordao.countDocuments(searchQuery).exec();
+};
+
+module.exports.getUniqueDescritores = async () => {
+  const descritores = await Acordao.distinct('Descritores');
+  return descritores;
 };
