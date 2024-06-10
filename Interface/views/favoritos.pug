@@ -20,8 +20,9 @@ block content
         .container
             each favorito, index in favoritos
                 .acordao-box.w3-card-4.w3-margin.w3-padding.w3-border
+                    - const invertedIndex = favoritos.length - index
                     h3 Acordão
-                    .order-number #{index + 1}
+                    .order-number #{invertedIndex}
                     p
                         strong Processo:
                         |  #{favorito.Processo}

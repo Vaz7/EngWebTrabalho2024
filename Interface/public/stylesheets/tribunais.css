@@ -1,0 +1,33 @@
+body {
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.w3-bar.w3-pink {
+    margin-bottom: 20px;
+}
+
+.w3-container {
+    margin-top: 20px;
+}
+
+.w3-ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.w3-ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.w3-ul li:last-child {
+    border-bottom: none;
+}
+
+.w3-bar-item.w3-button.w3-blue {
+    width: 100%;
+    text-align: left;
+}

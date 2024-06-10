@@ -710,16 +710,14 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
   }
 });
 
-// Route to initiate Google login
 router.get('/login/google', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/google/callback`;
   const authUrl = `http://localhost:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
 
-  // Redirect the user to the Google login page via the Auth server
   res.redirect(authUrl);
 });
 
-// Callback route to handle the token
+
 router.get('/login/google/callback', function(req, res) {
   axios.get('http://localhost:7777/users/login/google/callback', {
     params: req.query
@@ -740,16 +738,14 @@ router.get('/login/google/callback', function(req, res) {
   });
 });
 
-// Route to initiate Facebook login
 router.get('/login/facebook', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/facebook/callback`;
   const authUrl = `http://localhost:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
 
-  // Redirect the user to the Facebook login page via the Auth server
   res.redirect(authUrl);
 });
 
-// Callback route to handle the token
+
 router.get('/login/facebook/callback', function(req, res) {
   axios.get('http://localhost:7777/users/login/facebook/callback', {
     params: req.query
@@ -772,17 +768,15 @@ router.get('/login/facebook/callback', function(req, res) {
 
 
 router.get('/favoritos', Auth.verificaAutenticacao, async function(req, res) {
-  const userId = req.cookies.userId; // Ensure user ID is fetched correctly
+  const userId = req.cookies.userId;
   const token = req.cookies.token;
 
   try {
-    // Get the list of favoritos from the Auth server
     const favouritesResponse = await axios.get(`http://localhost:7777/users/${userId}/favoritos`, {
       params: { token: token }
     });
     const favoritos = favouritesResponse.data;
 
-    // Fetch details for each favorito from the API server
     const acordaoDetails = await Promise.all(
       favoritos.map(favorito => axios.get(`http://localhost:5555/acordaos/${favorito._id}`, {
         params: { token: token }
@@ -791,21 +785,37 @@ router.get('/favoritos', Auth.verificaAutenticacao, async function(req, res) {
 
     const detailedFavoritos = acordaoDetails.map(response => response.data);
 
-    // Combine the favorito comments with their detailed information
     const combinedFavoritos = favoritos.map(favorito => {
       const details = detailedFavoritos.find(detail => detail._id === favorito._id);
       return { ...favorito, ...details };
-    }).filter(favorito => favorito._id); // Filter out invalid entries
+    }).filter(favorito => favorito._id); 
 
     const canAddAcordao = req.isAdmin;
-    console.log(canAddAcordao);
 
-    // Render the Pug template with the combined favoritos
     res.render('favoritos', { favoritos: combinedFavoritos, canAddAcordao: canAddAcordao, activePage: 'favoritos', userId: userId});
   } catch (error) {
     console.error('Failed to fetch favoritos:', error);
     res.status(500).send({ error: 'Failed to fetch favoritos' });
   }
 });
+
+router.get('/tribunais', Auth.verificaAutenticacao, async function(req, res) {
+  const token = req.cookies.token;
+
+  try {
+    const response = await axios.get('http://localhost:5555/tribunais', {
+      params: { token: token }
+    });
+
+    const tribunais = response.data;
+    const canAddAcordao = req.isAdmin;
+
+    res.render('tribunais', { tribunais: tribunais, canAddAcordao: canAddAcordao, activePage: 'tribunais' });
+  } catch (error) {
+    console.error('Failed to fetch tribunais:', error);
+    res.status(500).send({ error: 'Failed to fetch tribunais' });
+  }
+});
+
 
 module.exports = router;
