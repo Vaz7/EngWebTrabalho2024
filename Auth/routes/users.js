@@ -69,13 +69,6 @@ router.get("/login/facebook", function (req, res) {
     passport.authenticate("facebook")(req, res);
 });
 
-router.get("/login/google", function (req, res) {
-    const returnUrl = req.query.returnUrl;
-    req.session.returnUrl = returnUrl;
-
-    passport.authenticate("google", {scope: ["profile", "email"]})(req, res);
-});
-
 
 router.get("/login/facebook/callback", function (req, res, next) {
     passport.authenticate("facebook", function (err, user, info, status) {
@@ -115,17 +108,21 @@ router.get("/login/facebook/callback", function (req, res, next) {
     })(req, res, next);
   });
 
-  router.get("/login/google/callback", function (req, res, next) {
-    passport.authenticate("google", function (err, user, info, status) {
+  router.get('/login/google', function(req, res) {
+    const returnUrl = req.query.returnUrl;
+    req.session.returnUrl = returnUrl;
+  
+    passport.authenticate('google', { scope: ['profile', 'email'] })(req, res);
+  });
+  
+  router.get('/login/google/callback', function(req, res, next) {
+    passport.authenticate('google', function(err, user, info, status) {
       if (err) {
-        return res.status(500).jsonp({ error: "Erro na autenticação: " + err });
+        return res.status(500).jsonp({ error: 'Erro na autenticação: ' + err });
       }
       if (!user) {
-        return res.status(401).jsonp({ error: "Autenticação falhou. Usuário não encontrado." });
+        return res.status(401).jsonp({ error: 'Autenticação falhou. Usuário não encontrado.' });
       }
-  
-      // Log the user object to verify its structure
-      console.log('Authenticated user:', user);
   
       jwt.sign(
         {
@@ -134,11 +131,11 @@ router.get("/login/facebook/callback", function (req, res, next) {
           email: user.email,
           level: user.level
         },
-        "EngWeb2024",
+        'EngWeb2024',
         { expiresIn: 3600 },
-        function (erro, token) {
+        function(erro, token) {
           if (erro) {
-            return res.status(500).jsonp({ error: "Erro na geração do token: " + erro });
+            return res.status(500).jsonp({ error: 'Erro na geração do token: ' + erro });
           }
   
           User.atualizaUltimoAcesso(user._id)
@@ -146,10 +143,10 @@ router.get("/login/facebook/callback", function (req, res, next) {
               res.status(201).jsonp({ token: token });
             })
             .catch(error => {
-              res.status(500).jsonp({ error: "Erro ao atualizar o último acesso: " + error });
+              res.status(500).jsonp({ error: 'Erro ao atualizar o último acesso: ' + error });
             });
         }
-      ); 
+      );
     })(req, res, next);
   });
 

@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose')
 var session = require('express-session'); // Import express-session
+const cors = require('cors');
 
 
 var passport = require('passport')
@@ -34,7 +35,7 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:7777/users/login/facebook/callback",
+      callbackURL: "http://localhost:8888/login/facebook/callback",
       profileFields: ['id', 'displayName', 'emails', 'name']
     },
     async function (accessToken, refreshToken, profile, cb) {
@@ -79,7 +80,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:7777/users/login/google/callback",
+      callbackURL: "http://localhost:8888/login/google/callback",
       profileFields: ['id', 'displayName', 'emails', 'name']
     },
     async function (accessToken, refreshToken, profile, cb) {
@@ -123,6 +124,8 @@ passport.use(
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());

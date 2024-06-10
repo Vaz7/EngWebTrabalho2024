@@ -710,5 +710,65 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
   }
 });
 
+// Route to initiate Google login
+router.get('/login/google', function(req, res) {
+  const returnUrl = `${req.protocol}://${req.get('host')}/login/google/callback`;
+  const authUrl = `http://localhost:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
+
+  // Redirect the user to the Google login page via the Auth server
+  res.redirect(authUrl);
+});
+
+// Callback route to handle the token
+router.get('/login/google/callback', function(req, res) {
+  axios.get('http://localhost:7777/users/login/google/callback', {
+    params: req.query
+  })
+  .then(response => {
+    const token = response.data.token;
+    res.cookie('token', token);
+
+    const decoded = jwt.decode(token);
+    const userId = decoded._id;
+    res.cookie('userId', userId);
+
+    res.redirect('/home');
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send({ error: 'Google login callback failed' });
+  });
+});
+
+// Route to initiate Facebook login
+router.get('/login/facebook', function(req, res) {
+  const returnUrl = `${req.protocol}://${req.get('host')}/login/facebook/callback`;
+  const authUrl = `http://localhost:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
+
+  // Redirect the user to the Facebook login page via the Auth server
+  res.redirect(authUrl);
+});
+
+// Callback route to handle the token
+router.get('/login/facebook/callback', function(req, res) {
+  axios.get('http://localhost:7777/users/login/facebook/callback', {
+    params: req.query
+  })
+  .then(response => {
+    const token = response.data.token;
+    res.cookie('token', token);
+
+    const decoded = jwt.decode(token);
+    const userId = decoded._id;
+    res.cookie('userId', userId);
+
+    res.redirect('/home');
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send({ error: 'Facebook login callback failed' });
+  });
+});
+
 
 module.exports = router;
