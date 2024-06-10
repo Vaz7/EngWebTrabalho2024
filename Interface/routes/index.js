@@ -771,4 +771,41 @@ router.get('/login/facebook/callback', function(req, res) {
 });
 
 
+router.get('/favoritos', Auth.verificaAutenticacao, async function(req, res) {
+  const userId = req.cookies.userId; // Ensure user ID is fetched correctly
+  const token = req.cookies.token;
+
+  try {
+    // Get the list of favoritos from the Auth server
+    const favouritesResponse = await axios.get(`http://localhost:7777/users/${userId}/favoritos`, {
+      params: { token: token }
+    });
+    const favoritos = favouritesResponse.data;
+
+    // Fetch details for each favorito from the API server
+    const acordaoDetails = await Promise.all(
+      favoritos.map(favorito => axios.get(`http://localhost:5555/acordaos/${favorito._id}`, {
+        params: { token: token }
+      }))
+    );
+
+    const detailedFavoritos = acordaoDetails.map(response => response.data);
+
+    // Combine the favorito comments with their detailed information
+    const combinedFavoritos = favoritos.map(favorito => {
+      const details = detailedFavoritos.find(detail => detail._id === favorito._id);
+      return { ...favorito, ...details };
+    }).filter(favorito => favorito._id); // Filter out invalid entries
+
+    const canAddAcordao = req.isAdmin;
+    console.log(canAddAcordao);
+
+    // Render the Pug template with the combined favoritos
+    res.render('favoritos', { favoritos: combinedFavoritos, canAddAcordao: canAddAcordao, activePage: 'favoritos', userId: userId});
+  } catch (error) {
+    console.error('Failed to fetch favoritos:', error);
+    res.status(500).send({ error: 'Failed to fetch favoritos' });
+  }
+});
+
 module.exports = router;

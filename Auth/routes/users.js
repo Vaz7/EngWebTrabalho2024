@@ -150,7 +150,18 @@ router.get("/login/facebook/callback", function (req, res, next) {
     })(req, res, next);
   });
 
-
+  router.get('/:id/favoritos', auth.verificaAcesso, async function(req, res) {
+    const userId = req.params.id;
+    console.log("123123")
+    
+    try {
+      const favoritos = await User.getFavoritos(userId);
+      console.log(favoritos)
+      res.jsonp(favoritos);
+    } catch (erro) {
+      res.status(500).jsonp(erro.message);
+    }
+  });
 
 router.get('/:id', auth.verificaAcesso, function (req, res) {
   if(req.params.id === req.idUtilizador){
@@ -162,16 +173,7 @@ router.get('/:id', auth.verificaAcesso, function (req, res) {
 })
 
 
-router.get('/:id/favoritos', auth.verificaAcesso, async function(req, res) {
-  const userId = req.params.id;
 
-  try {
-    const favoritos = await User.getFavoritos(userId);
-    res.jsonp(favoritos);
-  } catch (erro) {
-    res.status(500).jsonp(erro.message);
-  }
-});
 
 
 router.post('/login', passport.authenticate('local'), function (req, res) {

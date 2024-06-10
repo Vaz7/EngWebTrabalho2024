@@ -1,0 +1,41 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/favoritos.css')
+
+    .w3-bar.w3-pink
+        a.w3-bar-item.w3-button(class=(activePage === 'home' ? 'w3-gray' : ''), href="/home") Home
+        a.w3-bar-item.w3-button(class=(activePage === 'tribunais' ? 'w3-gray' : ''), href="/tribunais") Tribunais
+        a.w3-bar-item.w3-button(class=(activePage === 'taxonomia' ? 'w3-gray' : ''), href="/taxonomia") Taxonomia
+        a.w3-bar-item.w3-button(class=(activePage === 'favoritos' ? 'w3-gray' : ''), href="/favoritos") Favoritos
+        a.w3-bar-item.w3-button(class=(activePage === 'perfil' ? 'w3-gray' : ''), href="/perfil") Perfil
+        a.w3-bar-item.w3-button(class=(activePage === 'search' ? 'w3-gray' : ''), href="/search") Search
+        a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+        if canAddAcordao
+            a.w3-bar-item.w3-button(class=(activePage === 'registar/admin' ? 'w3-gray' : ''), href="/registar/admin") Adicionar admin
+            a.w3-bar-item.w3-button(class=(activePage === 'users' ? 'w3-gray' : ''), href="/users") Consultar Utilizadores
+
+    .w3-container
+        h2 Favoritos
+        .container
+            each favorito, index in favoritos
+                .acordao-box.w3-card-4.w3-margin.w3-padding.w3-border
+                    h3 Acordão
+                    .order-number #{index + 1}
+                    p
+                        strong Processo:
+                        |  #{favorito.Processo}
+                    p
+                        strong Magistrado:
+                        |  #{favorito.Magistrado}
+                    p
+                        strong Data:
+                        |  #{favorito.Data}
+                    p
+                        strong Descrição:
+                        textarea.w3-input.w3-border.w3-round(name="descricao", rows="3", readonly)= favorito.comment
+                    .button-group
+                        a.w3-button.w3-blue.w3-round.w3-margin-right(href=`/acordaos/${favorito._id}`) View
+                        form(action=`/users/${userId}/favoritos/${favorito._id}/delete`, method="post", class="inline-form")
+                            input(type="hidden", name="_method", value="delete")
+                            button.w3-button.w3-red.w3-round(type="submit") Remover dos Favoritos
