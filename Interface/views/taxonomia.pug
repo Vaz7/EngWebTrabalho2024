@@ -10,17 +10,97 @@ block content
       a.w3-bar-item.w3-button(href="/perfil") Perfil
       a.w3-bar-item.w3-button(href="/search") Search
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
-      
+
       if isAdmin
         a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
         a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
 
     .w3-container
       h2 Descritores
+
+      // Styled Search Bar
+      .w3-card-4.w3-padding.w3-margin-bottom(style="background-color: #f1f1f1;")
+        form(action="/taxonomia", method="get", class="w3-container")
+          .w3-row
+            .w3-col.s9
+              input#searchBar.w3-input.w3-border(type="text", name="search", value=searchQuery, placeholder="Search descritores...")
+            .w3-col.s3
+              button.w3-button.w3-pink.w3-margin-left(type="submit") Search
+
+        input(type="hidden", name="page", value=page || 1)
+        input(type="hidden", name="limit", value=limit || 25)
+
       if descritores.length
-        ul
+        ul#descritoresList.w3-ul.w3-card-4
           each descritor in descritores.filter(descritor => descritor.trim()).sort((a, b) => a.localeCompare(b))
-            li
-              a(href=`/search?descritor=${encodeURIComponent(descritor)}`)= descritor
+            li.w3-bar(data-descritor=descritor)
+              a.w3-bar-item.w3-button.w3-blue(href=`/search?Descritor=${descritor}`)= descritor
       else
-        p No descritores available.
+        p No descritores available
+
+      // Pagination
+      .w3-center
+        - const queryParams = new URLSearchParams({ search: searchQuery }).toString();
+        - const totalPages = Math.ceil(total / limit)
+        if totalPages > 1
+          .w3-bar
+            if page > 1
+              a.w3-button(href=`/taxonomia?page=${page - 1}&limit=${limit}&${queryParams}`) «
+            else
+              a.w3-button.w3-disabled «
+
+            - const startPage = Math.max(1, page - 2)
+            - const endPage = Math.min(totalPages, page + 2)
+            each num in [...Array(endPage - startPage + 1).keys()].map(n => n + startPage)
+              if num === page
+                a.w3-button.w3-pink= num
+              else
+                a.w3-button(href=`/taxonomia?page=${num}&limit=${limit}&${queryParams}`)= num
+
+            if endPage < totalPages - 1
+              span.w3-button.w3-hover-none(...) ...
+
+            if endPage < totalPages
+              form(action="/taxonomia", method="get", class="w3-inline w3-container w3-center", style="display: inline-block; margin: 0; padding: 0; width: auto;")
+                input.w3-input(type="number", name="page", min="1", max=totalPages, placeholder="Page", style="width: 70px; display: inline-block;")
+                input(type="hidden", name="limit", value=limit)
+                input(type="hidden", name="search", value=searchQuery)
+                button.w3-button.w3-green(type="submit", style="display: inline-block; padding: 6px 12px;") Go
+
+            if endPage < totalPages
+              a.w3-button(href=`/taxonomia?page=${totalPages}&limit=${limit}&${queryParams}`)= totalPages
+
+            if page < totalPages
+              a.w3-button(href=`/taxonomia?page=${page + 1}&limit=${limit}&${queryParams}`) »
+            else
+              a.w3-button.w3-disabled »
+
+    script.
+      document.querySelectorAll('.w3-hover-none').forEach(function(ellipsis) {
+        ellipsis.addEventListener('click', function() {
+          ellipsis.nextElementSibling.style.display = 'inline-block';
+        });
+      });
+
+      function normalizeText(text) {
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      }
+
+      function filterDescritores() {
+        const filter = normalizeText(document.getElementById('searchBar').value);
+        const descritores = document.querySelectorAll('#descritoresList li');
+        descritores.forEach(descritor => {
+          const text = normalizeText(descritor.getAttribute('data-descritor'));
+          if (text.includes(filter)) {
+            descritor.style.display = '';
+          } else {
+            descritor.style.display = 'none';
+          }
+        });
+      }
+
+      document.getElementById('searchBar').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          filterDescritores();
+        }
+      });

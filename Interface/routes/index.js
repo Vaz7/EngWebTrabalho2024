@@ -690,6 +690,9 @@ router.get('/users/remover/:id', Auth.verificaAdmin, async function(req, res, ne
 router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, next) {
   const isAdmin = req.isAdmin;
   const token = req.cookies.token;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 25;
+  const searchQuery = req.query.search || '';
 
   if (!token) {
     console.error('No token found in cookies');
@@ -698,17 +701,30 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
 
   try {
     const response = await axios.get('http://localhost:5555/acordaos/descritores', {
-      params: { token: token }
+      params: { 
+        token: token,
+        page: page,
+        limit: limit,
+        search: searchQuery // Pass the search query to the backend
+      }
     });
 
-    let descritores = response.data;
+    const { results, total } = response.data;
 
-    res.render('taxonomia', { isAdmin, descritores });
+    res.render('taxonomia', { 
+      isAdmin, 
+      descritores: results,
+      total: total,
+      page: page,
+      limit: limit,
+      searchQuery: searchQuery // Pass the search query to the template
+    });
   } catch (error) {
     console.error('Error fetching descritores:', error.response ? error.response.data : error.message);
     res.status(500).send('Error fetching descritores');
   }
 });
+
 
 router.get('/login/google', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/google/callback`;
