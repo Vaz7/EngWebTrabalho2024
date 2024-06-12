@@ -2,6 +2,16 @@ extends layout
 
 block content
   link(rel='stylesheet', href='/stylesheets/addAcordao.css')
+  .w3-bar.w3-pink
+    a.w3-bar-item.w3-button(class=(activePage === 'home' ? 'w3-gray' : ''), href="/home") Home
+    a.w3-bar-item.w3-button(class=(activePage === 'tribunais' ? 'w3-gray' : ''), href="/tribunais") Tribunais
+    a.w3-bar-item.w3-button(class=(activePage === 'taxonomia' ? 'w3-gray' : ''), href="/taxonomia") Taxonomia
+    a.w3-bar-item.w3-button(class=(activePage === 'favoritos' ? 'w3-gray' : ''), href="/favoritos") Favoritos
+    a.w3-bar-item.w3-button(class=(activePage === 'perfil' ? 'w3-gray' : ''), href="/perfil") Perfil
+    a.w3-bar-item.w3-button(class=(activePage === 'search' ? 'w3-gray' : ''), href="/search") Search
+    a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+    a.w3-bar-item.w3-button(class=(activePage === 'registar/admin' ? 'w3-gray' : ''), href="/registar/admin") Adicionar admin
+    a.w3-bar-item.w3-button(class=(activePage === 'users' ? 'w3-gray' : ''), href="/users") Consultar Utilizadores
 
   .w3-container.w3-padding
     a.w3-button.w3-pink.w3-border(href="/home") ⬅ Voltar
@@ -21,11 +31,17 @@ block content
         // Fields for Prioridade: true elements
         each campo in camposPrioridadeTrue
           // Avoid duplicate "Data do Acordão" field
-          if campo.NomeFixed.toLowerCase() != 'dataacordao'
+          if campo.NomeFixed.toLowerCase() != 'dataacordao' && campo.NomeFixed.toLowerCase() != 'descritores'
             .w3-row.w3-padding-16
               label.w3-col.s3(for=campo.NomeFixed) #{campo.Nome}
               .w3-col.s9
                 input.w3-input.w3-border(type="text" name=campo.NomeFixed id=campo.NomeFixed required)
+
+        // Explicitly add the "Descritores" field
+        .w3-row.w3-padding-16
+          label.w3-col.s3(for="Descritores") Descritores
+          .w3-col.s9
+            input.w3-input.w3-border(type="text" name="Descritores" id="Descritores" placeholder="Separate with commas" required)
 
         // Placeholder for dynamically added fields
         #additionalFields
@@ -37,6 +53,19 @@ block content
             option(value="" disabled selected) Select a field to add
             each campo in camposPrioridadeFalse
               option(value=campo.NomeFixed data-nome=campo.Nome) #{campo.Nome}
+
+      .w3-center
+        button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
+
+    // File upload form
+    form(action="/acordaos/adicionar/from-file" method="POST" enctype="multipart/form-data" class="w3-container w3-card-4 w3-padding w3-light-grey form-container" id="fileUploadForm")
+      fieldset.w3-padding
+        legend.w3-text-pink.w3-large Adicionar acordão from file
+
+        .w3-row.w3-padding-16
+          label.w3-col.s3(for="acordaoFile") Upload File
+          .w3-col.s9
+            input.w3-input.w3-border(type="file" name="acordaoFile" id="acordaoFile" required)
 
       .w3-center
         button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
@@ -90,4 +119,34 @@ block content
         // Reset the dropdown
         this.value = '';
       }
+    });
+
+    // JavaScript to handle descritores input as comma-separated values
+    document.querySelector('form').addEventListener('submit', function(event) {
+      const descritoresField = document.getElementById('Descritores');
+      if (descritoresField) {
+        descritoresField.value = descritoresField.value.split(',').map(item => item.trim()).join(',');
+      }
+    });
+
+    // JavaScript to handle alert for missing fields
+    document.getElementById('fileUploadForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(this);
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', this.action, true);
+
+      xhr.onload = function() {
+        if (xhr.status === 400) {
+          const response = JSON.parse(xhr.responseText);
+          alert(response.error);
+        } else if (xhr.status === 200) {
+          window.location.href = '/home';
+        } else {
+          alert('An unexpected error occurred.');
+        }
+      };
+
+      xhr.send(formData);
     });

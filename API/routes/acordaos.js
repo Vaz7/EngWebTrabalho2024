@@ -4,13 +4,18 @@ const Acordao = require('../controllers/acordao');
 var auth = require('../auth/auth');
 
 router.get('/descritores', auth.verificaAcesso, async function(req, res) {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 25;
+  const search = req.query.search || '';
+
   try {
-    const descritores = await Acordao.getUniqueDescritores();
+    const descritores = await Acordao.getUniqueDescritoresPaginated(page, limit, search);
     res.json(descritores);
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
+
 
 router.get('/search', auth.verificaAcesso, function(req, res) {
   const page = parseInt(req.query.page) || 1;

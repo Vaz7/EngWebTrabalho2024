@@ -3,6 +3,21 @@ var router = express.Router();
 var axios = require('axios')
 var Auth = require('../controllers/Auth')
 var jwt = require('jsonwebtoken');
+var multer = require('multer');
+var fs = require('fs');
+
+// Set up multer for file uploads
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ dest: 'uploads/' });
+
 
 router.get('/',Auth.verificaAutenticacao,function(req,res,next){
   res.redirect('login');
@@ -217,6 +232,11 @@ router.post('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, 
 
   let formData = req.body; // This contains the form data
 
+  // Handle descritores conversion to array
+  if (formData.Descritores) {
+    formData.Descritores = formData.Descritores.split(',').map(item => item.trim());
+  }
+
   // Format the DataAcordao field to MM/DD/YYYY
   if (formData.DataAcordao) {
     const dateValue = new Date(formData.DataAcordao);
@@ -224,7 +244,7 @@ router.post('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, 
     formData.DataAcordao = formattedDate;
   }
 
-  if(formData.Data){
+  if (formData.Data) {
     const dateValue = new Date(formData.Data);
     const formattedDate = `${(dateValue.getMonth() + 1).toString().padStart(2, '0')}/${dateValue.getDate().toString().padStart(2, '0')}/${dateValue.getFullYear()}`;
     formData.Data = formattedDate;
@@ -236,7 +256,6 @@ router.post('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, 
       ...formData
     };
 
-
     const response = await axios.post('http://localhost:5555/acordaos', payload);
     res.redirect('/home');
   } catch (error) {
@@ -244,6 +263,60 @@ router.post('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, 
     res.status(500).send('Error fetching data');
   }
 });
+
+router.post('/acordaos/adicionar/from-file', Auth.verificaAdmin, upload.single('acordaoFile'), async function (req, res, next) {
+  const token = req.cookies.token;
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  const filePath = req.file.path;
+
+  try {
+    const camposResponse = await axios.get('http://localhost:5555/campos', {
+      params: { token: token }
+    });
+
+    const campos = camposResponse.data;
+    const mandatoryFields = campos.filter(campo => campo.Prioridade).map(campo => campo.NomeFixed);
+
+    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+    // Ensure all mandatory fields are present
+    for (const field of mandatoryFields) {
+      if (!fileData[field]) {
+        return res.status(400).json({ error: `Missing mandatory field: ${field}` });
+      }
+    }
+
+    // Format the DataAcordao field to MM/DD/YYYY if it exists
+    if (fileData.DataAcordao) {
+      const dateValue = new Date(fileData.DataAcordao);
+      const formattedDate = `${(dateValue.getMonth() + 1).toString().padStart(2, '0')}/${dateValue.getDate().toString().padStart(2, '0')}/${dateValue.getFullYear()}`;
+      fileData.DataAcordao = formattedDate;
+    }
+
+    // Format the Data field to MM/DD/YYYY if it exists
+    if (fileData.Data) {
+      const dateValue = new Date(fileData.Data);
+      const formattedDate = `${(dateValue.getMonth() + 1).toString().padStart(2, '0')}/${dateValue.getDate().toString().padStart(2, '0')}/${dateValue.getFullYear()}`;
+      fileData.Data = formattedDate;
+    }
+
+    const payload = {
+      token: token,
+      ...fileData
+    };
+
+    const response = await axios.post('http://localhost:5555/acordaos', payload);
+    res.redirect('/home');
+  } catch (error) {
+    console.error('Error processing file data:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error processing file data');
+  }
+});
+
 
 router.get('/acordaos/remover/:id', Auth.verificaAdmin, async function(req, res, next) {
   const token = req.cookies.token;
@@ -395,6 +468,33 @@ router.get('/acordaos/:id', Auth.verificaAutenticacao, async function(req, res, 
     res.status(500).send('Error fetching data');
   }
 });
+
+
+router.get('/acordaos/download/:id', Auth.verificaAutenticacao, async function(req, res, next) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    console.error('No token found in cookies');
+    return res.status(401).send('Authentication token is missing.');
+  }
+
+  try {
+    const acordaoResponse = await axios.get(`http://localhost:5555/acordaos/${req.params.id}`, {
+      params: { token: token },
+      headers: { 'Cache-Control': 'no-cache' }
+    });
+
+    const acordao = acordaoResponse.data;
+
+    res.json(acordao);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data');
+  }
+});
+
+
+
 
 router.post('/users/:id/favoritos', Auth.verificaAutenticacao, async function(req, res, next) {
   const token = req.cookies.token;

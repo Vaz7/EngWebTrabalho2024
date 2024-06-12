@@ -3,7 +3,7 @@ html
   head
     title Acordão
     link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
-  body(class="w3-container")
+  body
     .w3-bar.w3-pink
       a.w3-bar-item.w3-button(class=(activePage === 'home' ? 'w3-gray' : ''), href="/home") Home
       a.w3-bar-item.w3-button(class=(activePage === 'tribunais' ? 'w3-gray' : ''), href="/tribunais") Tribunais
@@ -47,6 +47,7 @@ html
       if isAdmin
         a.w3-button.w3-red(href=`/acordaos/remover/${acordao._id}`) Remover acordão
         a.w3-button.w3-pink(href=`/acordaos/editar/${acordao._id}`) Editar acordão
+      button.w3-button.w3-blue(type="button", onclick=`downloadJSON("${acordao._id}")`) Download JSON
 
     // Modal for adding to favorites
     .w3-modal(id="addFavModal")
@@ -68,3 +69,27 @@ html
           document.getElementById('addFavModal').style.display = 'none';
         }
       };
+
+      // Download JSON function
+      function downloadJSON(acordaoId) {
+        console.log(`Downloading JSON for Acordao ID: ${acordaoId}`); // Debugging log
+        fetch(`/acordaos/download/${acordaoId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `acordao_${acordaoId}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          })
+          .catch(error => console.error('Error downloading JSON:', error));
+      }

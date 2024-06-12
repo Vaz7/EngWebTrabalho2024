@@ -2,6 +2,17 @@ extends layout
 
 block content
   link(rel='stylesheet', href='/stylesheets/addAcordao.css')
+    
+  .w3-bar.w3-pink
+    a.w3-bar-item.w3-button(class=(activePage === 'home' ? 'w3-gray' : ''), href="/home") Home
+    a.w3-bar-item.w3-button(class=(activePage === 'tribunais' ? 'w3-gray' : ''), href="/tribunais") Tribunais
+    a.w3-bar-item.w3-button(class=(activePage === 'taxonomia' ? 'w3-gray' : ''), href="/taxonomia") Taxonomia
+    a.w3-bar-item.w3-button(class=(activePage === 'favoritos' ? 'w3-gray' : ''), href="/favoritos") Favoritos
+    a.w3-bar-item.w3-button(class=(activePage === 'perfil' ? 'w3-gray' : ''), href="/perfil") Perfil
+    a.w3-bar-item.w3-button(class=(activePage === 'search' ? 'w3-gray' : ''), href="/search") Search
+    a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
+    a.w3-bar-item.w3-button(class=(activePage === 'registar/admin' ? 'w3-gray' : ''), href="/registar/admin") Adicionar admin
+    a.w3-bar-item.w3-button(class=(activePage === 'users' ? 'w3-gray' : ''), href="/users") Consultar Utilizadores
 
   .w3-container.w3-padding
     a.w3-button.w3-pink.w3-border(href="/home") ⬅ Voltar
