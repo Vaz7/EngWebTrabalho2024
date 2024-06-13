@@ -50,7 +50,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.post('/login', function(req, res) {
-  axios.post('http://localhost:7777/users/login',req.body)
+  axios.post('http://acordaosauth:7777/users/login',req.body)
   .then(response => {
     res.cookie('token',response.data.token)
     
@@ -76,7 +76,7 @@ router.post('/registar', async function(req, res, next) {
   let signupData = { username: req.body.username, name: req.body.name, email: req.body.email, password: req.body.password };
 
   try {
-    const response = await axios.post('http://localhost:7777/users/registar', signupData);
+    const response = await axios.post('http://acordaosauth:7777/users/registar', signupData);
     let error = response.data.error;
 
     if (error) { // Se a autenticação falhou.
@@ -113,7 +113,7 @@ router.post('/registar/admin', async function(req, res, next) {
 
 
   try {
-    const response = await axios.post('http://localhost:7777/users/registaradmin', {
+    const response = await axios.post('http://acordaosauth:7777/users/registaradmin', {
       token: token,
       username: req.body.username, 
       name: req.body.name, 
@@ -157,7 +157,7 @@ router.get('/home', Auth.verificaAutenticacao, async function(req, res, next) {
   const query = req.query.query || '';
 
   try {
-    const response = await axios.get(`http://localhost:5555/acordaos/search`, {
+    const response = await axios.get(`http://acordaosapi:5555/acordaos/search`, {
       params: { 
         ...req.query, 
         page: page, 
@@ -166,14 +166,14 @@ router.get('/home', Auth.verificaAutenticacao, async function(req, res, next) {
       }
     });
 
-    const totalResponse = await axios.get(`http://localhost:5555/acordaos/count`, {
+    const totalResponse = await axios.get(`http://acordaosapi:5555/acordaos/count`, {
       params: { 
         token: token,
         query: query 
       }
     });
 
-    const tribunaisResponse = await axios.get('http://localhost:5555/tribunais', {
+    const tribunaisResponse = await axios.get('http://acordaosapi:5555/tribunais', {
       params: { token: token }
     });
 
@@ -207,7 +207,7 @@ router.get('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, n
   }
 
   try {
-    const camposResponse = await axios.get('http://localhost:5555/campos', {
+    const camposResponse = await axios.get('http://acordaosapi:5555/campos', {
       params: { token: token }
     });
     const campos = camposResponse.data;
@@ -256,7 +256,7 @@ router.post('/acordaos/adicionar', Auth.verificaAdmin, async function(req, res, 
       ...formData
     };
 
-    const response = await axios.post('http://localhost:5555/acordaos', payload);
+    const response = await axios.post('http://acordaosapi:5555/acordaos', payload);
     res.redirect('/home');
   } catch (error) {
     console.error('Error fetching data:', error.response ? error.response.data : error.message);
@@ -274,7 +274,7 @@ router.post('/acordaos/adicionar/from-file', Auth.verificaAdmin, upload.single('
   const filePath = req.file.path;
 
   try {
-    const camposResponse = await axios.get('http://localhost:5555/campos', {
+    const camposResponse = await axios.get('http://acordaosapi:5555/campos', {
       params: { token: token }
     });
 
@@ -309,7 +309,7 @@ router.post('/acordaos/adicionar/from-file', Auth.verificaAdmin, upload.single('
       ...fileData
     };
 
-    const response = await axios.post('http://localhost:5555/acordaos', payload);
+    const response = await axios.post('http://acordaosapi:5555/acordaos', payload);
     res.redirect('/home');
   } catch (error) {
     console.error('Error processing file data:', error.response ? error.response.data : error.message);
@@ -326,7 +326,7 @@ router.get('/acordaos/remover/:id', Auth.verificaAdmin, async function(req, res,
   }
 
   try {
-    const delResponse = await axios.delete(`http://localhost:5555/acordaos/${req.params.id}`, {
+    const delResponse = await axios.delete(`http://acordaosapi:5555/acordaos/${req.params.id}`, {
       params: { token: token }
     });
 
@@ -346,11 +346,11 @@ router.get('/acordaos/editar/:id', Auth.verificaAdmin, async function(req, res, 
     return res.status(401).send('Authentication token is missing.');
   }
   try {
-    const acordaoResponse = await axios.get(`http://localhost:5555/acordaos/${req.params.id}`, {
+    const acordaoResponse = await axios.get(`http://acordaosapi:5555/acordaos/${req.params.id}`, {
       params: { token: token }
     });
 
-    const camposResponse = await axios.get('http://localhost:5555/campos', {
+    const camposResponse = await axios.get('http://acordaosapi:5555/campos', {
       params: { token: token }
     });
 
@@ -415,7 +415,7 @@ router.post('/acordaos/editar/:id', Auth.verificaAdmin, async function(req, res,
       ...formData
     };
 
-    const response = await axios.put(`http://localhost:5555/acordaos/${req.params.id}`, payload);
+    const response = await axios.put(`http://acordaosapi:5555/acordaos/${req.params.id}`, payload);
     res.redirect('/home');
   } catch (error) {
     console.error('Error updating data:', error.response ? error.response.data : error.message);
@@ -433,19 +433,19 @@ router.get('/acordaos/:id', Auth.verificaAutenticacao, async function(req, res, 
   }
 
   try {
-    const acordaoResponse = await axios.get(`http://localhost:5555/acordaos/${req.params.id}`, {
+    const acordaoResponse = await axios.get(`http://acordaosapi:5555/acordaos/${req.params.id}`, {
       params: { token: token }
     });
 
-    const camposResponse = await axios.get('http://localhost:5555/campos', {
+    const camposResponse = await axios.get('http://acordaosapi:5555/campos', {
       params: { token: token }
     });
 
-    const favouritesResponse = await axios.get(`http://localhost:7777/users/${userId}/favoritos`, {
+    const favouritesResponse = await axios.get(`http://acordaosauth:7777/users/${userId}/favoritos`, {
       params: { token: token }
     });
 
-    const tribunaisResponse = await axios.get('http://localhost:5555/tribunais', {
+    const tribunaisResponse = await axios.get('http://acordaosapi:5555/tribunais', {
       params: { token: token }
     });
 
@@ -479,7 +479,7 @@ router.get('/acordaos/download/:id', Auth.verificaAutenticacao, async function(r
   }
 
   try {
-    const acordaoResponse = await axios.get(`http://localhost:5555/acordaos/${req.params.id}`, {
+    const acordaoResponse = await axios.get(`http://acordaosapi:5555/acordaos/${req.params.id}`, {
       params: { token: token },
       headers: { 'Cache-Control': 'no-cache' }
     });
@@ -507,7 +507,7 @@ router.post('/users/:id/favoritos', Auth.verificaAutenticacao, async function(re
   }
 
   try {
-    const response = await axios.post(`http://localhost:7777/users/${req.params.id}/favoritos`, {
+    const response = await axios.post(`http://acordaosauth:7777/users/${req.params.id}/favoritos`, {
       token: token,
       _id: favorito,
       comment: comment
@@ -528,7 +528,7 @@ router.post('/users/:id/favoritos/:acordaoId/delete', Auth.verificaAutenticacao,
     return res.status(401).send('Authentication token is missing.');
   }
   try {
-    const response = await axios.delete(`http://localhost:7777/users/${req.params.id}/favoritos/${req.params.acordaoId}`, {
+    const response = await axios.delete(`http://acordaosauth:7777/users/${req.params.id}/favoritos/${req.params.acordaoId}`, {
       params: { token: token }
     });
     res.redirect('back');
@@ -559,7 +559,7 @@ router.post('/search', Auth.verificaAutenticacao, async function(req, res, next)
   const limit = parseInt(req.query.limit) || 25;
 
   try {
-    const response = await axios.get('http://localhost:5555/acordaos/search', {
+    const response = await axios.get('http://acordaosapi:5555/acordaos/search', {
       params: {
         ...params,
         token,
@@ -568,7 +568,7 @@ router.post('/search', Auth.verificaAutenticacao, async function(req, res, next)
       }
     });
 
-    const totalResponse = await axios.get('http://localhost:5555/acordaos/count', {
+    const totalResponse = await axios.get('http://acordaosapi:5555/acordaos/count', {
       params: {
         ...params,
         token
@@ -622,7 +622,7 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
   }
 
   try {
-    const response = await axios.get('http://localhost:5555/acordaos/search', {
+    const response = await axios.get('http://acordaosapi:5555/acordaos/search', {
       params: {
         ...params,
         token,
@@ -631,7 +631,7 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
       }
     });
 
-    const totalResponse = await axios.get('http://localhost:5555/acordaos/count', {
+    const totalResponse = await axios.get('http://acordaosapi:5555/acordaos/count', {
       params: {
         ...params,
         token
@@ -664,7 +664,7 @@ router.get('/perfil', Auth.verificaAutenticacao, async function(req, res, next) 
   }
 
   try {
-    const response = await axios.get(`http://localhost:7777/users/${userId}`, {
+    const response = await axios.get(`http://acordaosauth:7777/users/${userId}`, {
       params: { token: token }
     });
 
@@ -698,7 +698,7 @@ router.post('/perfil', Auth.verificaAutenticacao, async function(req, res, next)
       ...formData
     };
 
-    const response = await axios.put(`http://localhost:7777/users/${userId}`, payload);
+    const response = await axios.put(`http://acordaosauth:7777/users/${userId}`, payload);
 
     res.redirect('/home');
   } catch (error) {
@@ -728,7 +728,7 @@ router.get('/perfil/delete', Auth.verificaAutenticacao, async function(req, res,
   }
 
   try {
-    const response = await axios.delete(`http://localhost:7777/users/${userId}`, {
+    const response = await axios.delete(`http://acordaosauth:7777/users/${userId}`, {
       params: { token: token }
     });
 
@@ -746,7 +746,7 @@ router.get('/users', Auth.verificaAdmin, async function(req, res, next) {
   const token = req.cookies.token;
   
   try {
-    const response = await axios.get('http://localhost:7777/users', {
+    const response = await axios.get('http://acordaosauth:7777/users', {
       params: { token: token }
     });
 
@@ -770,7 +770,7 @@ router.get('/users/remover/:id', Auth.verificaAdmin, async function(req, res, ne
   }
 
   try {
-    const response = await axios.delete(`http://localhost:7777/users/${userIdToDelete}`, {
+    const response = await axios.delete(`http://acordaosauth:7777/users/${userIdToDelete}`, {
       params: { token: token }
     });
 
@@ -800,7 +800,7 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
   }
 
   try {
-    const response = await axios.get('http://localhost:5555/acordaos/descritores', {
+    const response = await axios.get('http://acordaosapi:5555/acordaos/descritores', {
       params: { 
         token: token,
         page: page,
@@ -828,14 +828,14 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
 
 router.get('/login/google', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/google/callback`;
-  const authUrl = `http://localhost:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
+  const authUrl = `http://acordaosauth:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
 
   res.redirect(authUrl);
 });
 
 
 router.get('/login/google/callback', function(req, res) {
-  axios.get('http://localhost:7777/users/login/google/callback', {
+  axios.get('http://acordaosauth:7777/users/login/google/callback', {
     params: req.query
   })
   .then(response => {
@@ -856,14 +856,14 @@ router.get('/login/google/callback', function(req, res) {
 
 router.get('/login/facebook', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/facebook/callback`;
-  const authUrl = `http://localhost:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
+  const authUrl = `http://acordaosauth:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
 
   res.redirect(authUrl);
 });
 
 
 router.get('/login/facebook/callback', function(req, res) {
-  axios.get('http://localhost:7777/users/login/facebook/callback', {
+  axios.get('http://acordaosauth:7777/users/login/facebook/callback', {
     params: req.query
   })
   .then(response => {
@@ -888,13 +888,13 @@ router.get('/favoritos', Auth.verificaAutenticacao, async function(req, res) {
   const token = req.cookies.token;
 
   try {
-    const favouritesResponse = await axios.get(`http://localhost:7777/users/${userId}/favoritos`, {
+    const favouritesResponse = await axios.get(`http://acordaosauth:7777/users/${userId}/favoritos`, {
       params: { token: token }
     });
     const favoritos = favouritesResponse.data;
 
     const acordaoDetails = await Promise.all(
-      favoritos.map(favorito => axios.get(`http://localhost:5555/acordaos/${favorito._id}`, {
+      favoritos.map(favorito => axios.get(`http://acordaosapi:5555/acordaos/${favorito._id}`, {
         params: { token: token }
       }))
     );
@@ -919,7 +919,7 @@ router.get('/tribunais', Auth.verificaAutenticacao, async function(req, res) {
   const token = req.cookies.token;
 
   try {
-    const response = await axios.get('http://localhost:5555/tribunais', {
+    const response = await axios.get('http://acordaosapi:5555/tribunais', {
       params: { token: token }
     });
 
