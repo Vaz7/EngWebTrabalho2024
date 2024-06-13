@@ -34,4 +34,40 @@ O servidor de autenticação é responsável pela gestão dos utilizadores, cria
 
 No servidor de autenticação é criado o ***token*** (*jsonwebtoken*) sempre é feito um registo ou *login*. Esse *token* irá ficar guardado num *cookie* no *browser* do utilizador para que depois seja usado em todos os pedidos feitos pelo mesmo.
 
-### **Rotas**
+### **Rotas**- 
+
+`GET /`: trips
+`POST /registar`:
+`GET /login/facebook`:
+`GET /login/facebook/callback`:
+`GET /login/google`:
+`GET /login/google/callback`:
+`GET /:id/favoritos`:
+`GET /:id`:
+`POST /login`:
+`PUT /:id`:
+`DELETE /:id`:
+`POST /registaradmin`:
+`POST /:id/favoritos`:
+`DELETE /:id/favoritos/:favoritoId`:
+
+
+
+## **API**
+`GET /acordaos/descritores`:
+`GET /acordaos/search`:
+`GET /acordaos/count`:
+`GET /acordaos/:id`:
+`POST /acordaos/`:
+`PUT /acordaos/:id`:
+`DELETE /acordaos/:id`:
+
+`GET /campos/`:
+`POST /campos/`:
+`PUT /campos/:id`:
+`DELETE /campos/:id`:
+
+`GET /tribunais/`:
+`POST /tribunais/`:
+`PUT /tribunais/:id`:
+`DELETE /tribunais/:id`:
