@@ -89,26 +89,26 @@ No servidor de autenticação é criado o ***token*** (*jsonwebtoken*) sempre é
 
 
 ## **Interface**
-- `GET /`:
-- `GET /logout`:
-- `GET /login`:
-- `POST /login`:
-- `GET /registar`:
-- `POST /registar`:
-- `GET /registar/admin`:
-- `POST /registar/admin`:
-- `GET /home`:
-- `GET /acordaos/adicionar`:
-- `POST /acordaos/adicionar`:
-- `POST /acordaos/adicionar/from-file`:
-- `GET /acordaos/remover/:id`:
-- `GET /acordaos/editar/:id`:
-- `POST /acordaos/editar/:id`:
-- `GET /acordaos/:id`:
-- `GET /acordaos/download/:id`:
-- `POST /users/:id/favoritos`:
-- `POST /users/:id/favoritos/:acordaoId/delete`:
-- `POST /search`:
+- `GET /`: Rota redireciona para o Login.
+- `GET /logout`: Rota remove o token das cookies e redireciona para o Login.
+- `GET /login`: Rota de login que renderiza a página para o utilizador inserir os dados, caso esta rota seja acedida por um utilizador que já tenha um token válido este é redirecionado para a Home.
+- `POST /login`: Quando o utilizador submete os seus dados de Login para o servidor de interface, este recebe os dados e envia-os ao servidor de autenticação. O servidor de autenticação irá validar o acesso do utilizador com os dados na base de dados e responderá com um *token*.
+- `GET /registar`: Rota de registo que renderiza a página para o utilizador inserir os dados para uma nova conta.
+- `POST /registar`: Quando o utilizador submete os seus dados de Registo para o servidor de interface, este recebe os dados e envia-os ao servidor de autenticação. O servidor de autenticação irá criar a nova conta de utilizador com os dados e responderá com um *token*.
+- `GET /registar/admin`: Rota de registo de administradores que renderiza a página onde um administrador pode criar novos administradores.
+- `POST /registar/admin`: Quando o administrador submete os dados de Registo para o servidor de interface, este recebe os dados e envia-os ao servidor de autenticação. O servidor de autenticação irá criar a nova conta de administrador com estes dados.
+- `GET /home`: Rota que renderiza a home page, esta rota mostra todos os acordãos existentes na base de dados (usa paginação).
+- `GET /acordaos/adicionar`: Rota que renderiza o form para adicionar um novo acordão.
+- `POST /acordaos/adicionar`: Rota que envia os dados introduzidos no form da Interface para a API para que sejam inseridos na base de dados.
+- `POST /acordaos/adicionar/from-file`: Rota que envia os dados introduzidos através de um ficheiro no form da Interface para a API para que sejam inseridos na base de dados.
+- `GET /acordaos/remover/:id`: Rota que faz um DELETE na api do acordão passado nos parametros.
+- `GET /acordaos/editar/:id`: Rota que renderiza um acordão existente para permitir a sua edição.
+- `POST /acordaos/editar/:id`: Rota que faz um PUT na api para alterar os dados do acordão na base de dados.
+- `GET /acordaos/:id`: Rota que renderiza os dados do acordão passado nos parametros.
+- `GET /acordaos/download/:id`: Rota que faz o download do acordão passado nos parametros.
+- `POST /users/:id/favoritos`: Rota que adiciona um acordão aos favoritos fazendo um POST para o servidor de autenticação.
+- `POST /users/:id/favoritos/:acordaoId/delete`: Rota que remove um acordão dos favoritos fazendo um DELETE para o servidor de autenticação.
+- `POST /search`: 
 - `GET /search`:
 - `GET /perfil`:
 - `POST /perfil`:
