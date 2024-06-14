@@ -127,32 +127,128 @@ No servidor de autenticação é criado o ***token*** (*jsonwebtoken*) sempre é
 ## **Demonstração do sistema**
 
 ### **Registo de conta**
+Na página de registo de conta é pedida a informação do utilizador para criar nova conta. Caso já exista uma conta com o email inserido é mostrado um erro ao utilizador.
+
+<div align="center">
+<img width="30%" src="imagensRelatorio/registar.png"/>
+</div>
+
 
 ### **Login**
+Na página de login o utilizador pode inserir os dados da sua conta (caso já tenha uma) ou escolher criar uma nova conta. Pode também optar por fazer o login com a conta do Facebook ou Google.
+
+<div align="center">
+<img width="30%" src="imagensRelatorio/login.png"/>
+</div>
+
+
+
 
 ### **Home**
-mostrar tanto a view de user como de admin
+A página home é onde aparecem todos os acordãos listados. Esta página é diferente para os utilizadores normais e para os administradores, enquanto os utilizadores apenas conseguem consultar os acordãos os administradores também têm as opções de os editar e remover. Os administradores podem também adicionar novos acordãos. 
+
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/homeUser.png"/>
+<p>Página Home de um utilizador</p>
+</div>
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/homeAdmin.png"/>
+<p>Página Home de um Administrador</p>
+</div>  
+
+### **Consultar um acordão**
+Na consulta dos acordãos os utilizadores têm as opções de adicionar o acordãos aos favoritos e de fazer Download do acordão. Para os administradores há também aqui a opção de apagar e editar o acordão.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/consultaUser.png"/>
+<p>Consulta de acordão por um utilizador</p>
+</div>  
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/consultaAdmin.png"/>
+<p>Consulta de acordão por um Administrador</p>
+</div>  
+
+### **Adicionar um acordão**
+Os administradores podem adicionar novos acordãos. De acordo com a informação da coleção `campos`, são mostrados alguns campos de preenchimento obrigatório, para os restantes campos opcionais existe um menu em que é possível adicionar mais campos ao acordão. É também possível adicionar acordãos via ficheiro, sendo que é feita a validação dos campos obrigatórios e o utilizador é notificado caso falte algum campo.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/addAcordao.png"/>
+</div>  
+
+
+### **Editar um acordão**
+Na página de edição de um acordão o administrador tanto pode editar os dados já existentes como também adicionar novos campos ao acordão através de um menu semelhante ao de criar um acordão.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/editarAcordao.png"/>
+</div>  
+
+### **Tribunais**
+Na página dos tribunais é feita uma listagem de todos os tribunais existentes, sendo que quando o utilizador clica num tribunal é reencaminhado para a página de pesquisa onde é feita uma pesquisa de todos os acordãos pertencentes a esse tribunal.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/tribunais.png"/>
+</div>  
+
+Ao clicar no Tribunal da Relação do Porto o utilizador é redirecionado para a página da imagem abaixo.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/tribunalPesquisa.png"/>
+</div>  
+
+
+### **Taxonomia**
+Na página da taxonomia é apresentada uma taxonomia de desctritores, o utilizador pode também pesquisar por keywords de forma a filtrar os termos apresentados. Clicando num dos descritores o utilizador é reencaminhado para a página de pesquisa onde é feita uma pesquisa por todos os acordãos que incluam esse descritor. Nesta página é também feita páginação para aumento de performance.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/taxonomia.png"/>
+</div> 
 
 
 ### **Favoritos**
+Na página de favoritos o utilizador pode consultar e apagar os favoritos existentes.
 
-### **Taxonomia**
+<div align="center">
+<img width="60%" src="imagensRelatorio/favoritos.png"/>
+</div> 
+
 
 ### **Perfil**
+Na página de perfil é possível que os utilizadores e administradores alterem a informação do seu perfil, é também mostrada a data do ultimo acesso e a data de criação de conta (que não podem ser alteradas). É também possível que o utilizador/administrador apague aqui a sua conta. Ao apagar a conta o token é removido da cookie e a sessão é terminada.
 
-### **Tribunais**
+<div align="center">
+<img width="60%" src="imagensRelatorio/peerfil.png"/>
+</div> 
+
+
 
 ### **Pesquisa**
+Na página de pesquisa é possível pesquisar acordãos por Autor, Descritor, Magistrado e autor, é também possível pesquisar por qualquer combinação destes.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/pesquisa.png"/>
+</div> 
 
 ### **Adicionar admin**
-apenas admins
+Para os administradores, na navbar existe um botão para adicionar novos administradores.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/registarAdmin.png"/>
+</div> 
 
 ### **Consultar utilizadores**
-apenas admins
+Os administradores têm também a opção de consultar todas as contas existentes no sistema e de remover as contas que desejarem. Caso o utilizador apague a sua própria conta o token é removido das cookies e a sessão terminada.
+
+<div align="center">
+<img width="60%" src="imagensRelatorio/users.png"/>
+</div> 
 
 
 ## **Conclusão**
-
+FALTA
 
 ## **Correr o projeto**
 
@@ -163,3 +259,5 @@ Executar os comandos:
 `cd EngWebTrabalho2024`
 
 `sudo docker-compose up --build`
+
+Existe já criada uma conta de administrador com Email: `admin` e Password: `12345`. Para testar com uma conta normal basta fazer um novo registo de utilizador.

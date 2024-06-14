@@ -3,7 +3,7 @@ extends layout
 block content
   
     link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
-  
+
     .w3-bar.w3-pink
       a.w3-bar-item.w3-button(class=(activePage === 'home' ? 'w3-gray' : ''), href="/home") Home
       a.w3-bar-item.w3-button(class=(activePage === 'tribunais' ? 'w3-gray' : ''), href="/tribunais") Tribunais
@@ -19,10 +19,10 @@ block content
     .w3-container.w3-padding
       button.w3-button.w3-pink.w3-border(type="button", onclick="window.history.back()") ⬅ Voltar
 
-    h1(class="w3-center") Acordão
+
     .w3-card-4
-      .w3-container.w3-teal
-        h2 #{acordao.Processo}
+      .w3-container.w3-pink
+        h2 Acordão #{acordao.Processo}
 
       .w3-container
         ul
