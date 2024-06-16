@@ -12,7 +12,7 @@ block content
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
 
       if isAdmin
-        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar Admin
         a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
 
     .w3-container
@@ -25,7 +25,7 @@ block content
             .w3-col.s9
               input#searchBar.w3-input.w3-border(type="text", name="search", value=searchQuery, placeholder="Search descritores...")
             .w3-col.s3
-              button.w3-button.w3-pink.w3-margin-left(type="submit") Search
+              button.w3-button.w3-pink.w3-margin-left(type="submit") Procurar
 
         input(type="hidden", name="page", value=page || 1)
         input(type="hidden", name="limit", value=limit || 25)
@@ -36,7 +36,7 @@ block content
             li.w3-bar(data-descritor=descritor)
               a.w3-bar-item.w3-button.w3-blue(href=`/search?Descritor=${descritor}`)= descritor
       else
-        p No descritores available
+        p Não há descritores disponíveis
 
       // Pagination
       .w3-center

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  link(rel='stylesheet', href='/stylesheets/form.css')
+
+  .w3-container.w3-padding
+    h2 Adicionar Tribunal
+
+    form(action="/tribunais/adicionar" method="POST" class="w3-container w3-card-4 w3-light-grey w3-padding")
+      .w3-row.w3-padding-16
+        label.w3-col.s3(for="id") ID
+        .w3-col.s9
+          input.w3-input.w3-border(type="text" name="id" id="id" required)
+
+      .w3-row.w3-padding-16
+        label.w3-col.s3(for="name") Nome
+        .w3-col.s9
+          input.w3-input.w3-border(type="text" name="name" id="name" required)
+
+      .w3-center
+        button.w3-button.w3-pink.w3-margin-top(type="submit") Adicionar

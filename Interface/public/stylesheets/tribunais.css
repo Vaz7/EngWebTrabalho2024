@@ -19,7 +19,7 @@ body {
 }
 
 .w3-ul li {
-    padding: 10px;
+    padding: 0;
     border-bottom: 1px solid #ccc;
 }
 
@@ -27,7 +27,17 @@ body {
     border-bottom: none;
 }
 
+.tribunal-item {
+    display: flex;
+    align-items: center;
+}
+
 .w3-bar-item.w3-button.w3-blue {
-    width: 100%;
+    flex-grow: 1;
     text-align: left;
+}
+
+.remove-button {
+    margin-left: 10px;
+    flex-shrink: 0;
 }

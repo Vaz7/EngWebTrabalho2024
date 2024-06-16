@@ -597,7 +597,7 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
     return res.status(401).send('Authentication token is missing.');
   }
 
-  const { Autor, Tribunal, Magistrado,Descritor, page, limit } = req.query;
+  const { Autor, Tribunal, Magistrado, Descritor, page, limit } = req.query;
 
   const params = {};
   if (Autor && Autor.trim()) params.Autor = Autor.trim();
@@ -609,16 +609,29 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
   const limitNumber = parseInt(limit) || 25;
   const isAdmin = req.isAdmin;
   if (!Autor && !Tribunal && !Magistrado && !Descritor) {
-    // Render the form with empty search results when no search parameters are provided
-    res.render('search', {
-      results: [],
-      page: pageNumber,
-      isAdmin,
-      limit: limitNumber,
-      total: 0,
-      query: {}
-    });
-    return;
+    // Fetch tribunais to populate the dropdown
+    try {
+      const tribunaisResponse = await axios.get('http://acordaosapi:5555/tribunais', {
+        params: { token: token }
+      });
+      const tribunais = tribunaisResponse.data;
+
+      // Render the form with empty search results when no search parameters are provided
+      res.render('search', {
+        results: [],
+        page: pageNumber,
+        isAdmin,
+        limit: limitNumber,
+        total: 0,
+        query: {},
+        tribunais: tribunais
+      });
+      return;
+    } catch (error) {
+      console.error('Error fetching tribunais:', error.response ? error.response.data : error.message);
+      res.status(500).send('Error fetching tribunais');
+      return;
+    }
   }
 
   try {
@@ -638,14 +651,20 @@ router.get('/search', Auth.verificaAutenticacao, async function(req, res, next) 
       }
     });
 
+    const tribunaisResponse = await axios.get('http://acordaosapi:5555/tribunais', {
+      params: { token: token }
+    });
+    const tribunais = tribunaisResponse.data;
+
     const canAddAcordao = req.isAdmin; 
     res.render('search', {
       results: response.data,
       page: pageNumber,
       limit: limitNumber,
       total: totalResponse.data.total,
-      query: { Autor, Tribunal, Magistrado,Descritor },
-      canAddAcordao
+      query: { Autor, Tribunal, Magistrado, Descritor },
+      canAddAcordao,
+      tribunais
     });
   } catch (error) {
     console.error('Error fetching search results:', error.response ? error.response.data : error.message);
@@ -930,6 +949,45 @@ router.get('/tribunais', Auth.verificaAutenticacao, async function(req, res) {
   } catch (error) {
     console.error('Failed to fetch tribunais:', error);
     res.status(500).send({ error: 'Failed to fetch tribunais' });
+  }
+});
+
+router.get('/tribunais/adicionar', Auth.verificaAdmin, function(req, res) {
+  const date = new Date().toISOString().substring(0, 19);
+  res.render('adicionarTribunal', { d: date });
+});
+
+router.post('/tribunais/adicionar', Auth.verificaAdmin, async function(req, res) {
+  const token = req.cookies.token;
+  const tribunalData = {
+    _id: req.body.id,
+    name: req.body.name
+  };
+
+  try {
+    await axios.post('http://acordaosapi:5555/tribunais', tribunalData, {
+      params: { token: token }
+    });
+    res.redirect('/tribunais');
+  } catch (error) {
+    console.error('Failed to add tribunal:', error);
+    const date = new Date().toISOString().substring(0, 19);
+    res.render('adicionarTribunal', { warning: "Erro ao adicionar o tribunal.", d: date });
+  }
+});
+
+router.get('/tribunais/remover/:id', Auth.verificaAdmin, async function(req, res) {
+  const token = req.cookies.token;
+  const tribunalId = req.params.id;
+
+  try {
+    await axios.delete(`http://acordaosapi:5555/tribunais/${tribunalId}`, {
+      params: { token: token }
+    });
+    res.redirect('/tribunais');
+  } catch (error) {
+    console.error('Failed to remove tribunal:', error);
+    res.status(500).send({ error: 'Failed to remove tribunal' });
   }
 });
 

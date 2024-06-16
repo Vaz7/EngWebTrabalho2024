@@ -16,8 +16,21 @@ block content
             a.w3-bar-item.w3-button(class=(activePage === 'users' ? 'w3-gray' : ''), href="/users") Consultar Utilizadores
 
     .w3-container
+        if canAddAcordao
+            .w3-container
+                a.w3-button.w3-green(href="/tribunais/adicionar") Adicionar Tribunal
+
         h2 Tribunais
         ul.w3-ul.w3-card-4
             each tribunal in tribunais
-                li.w3-bar
+                li.w3-bar.tribunal-item
                     a.w3-bar-item.w3-button.w3-blue(href=`/search?Tribunal=${tribunal._id}`) #{tribunal.name}
+                    if canAddAcordao
+                        a.w3-bar-item.w3-button.w3-red.remove-button(onclick=`confirmDelete('${tribunal._id}', '${tribunal.name}')`) Remover
+
+    script.
+        function confirmDelete(id, name) {
+            if (confirm(`Tem a certeza que deseja remover o tribunal ${name}?`)) {
+                window.location.href = `/tribunais/remover/${id}`;
+            }
+        }

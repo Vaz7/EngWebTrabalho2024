@@ -14,7 +14,7 @@ block content
       a.w3-bar-item.w3-button(href="/search") Pesquisa
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
       if isAdmin
-        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar Admin
         a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
 
       
@@ -26,14 +26,14 @@ block content
 
           // Fields for user profile elements
           .w3-row.w3-padding-16
-            label.w3-col.s3(for="username") Username
+            label.w3-col.s3(for="username") Nome de Utilizador
             .w3-col.s9
               input.w3-input.w3-border(type="text" name="username" id="username" value=`${user.dados.username}` required)
               if isAdmin
                 span.w3-margin
                   i.fas.fa-user-shield.w3-text-red(title="Admin")
           .w3-row.w3-padding-16
-            label.w3-col.s3(for="name") Name
+            label.w3-col.s3(for="name") Nome
             .w3-col.s9
               input.w3-input.w3-border(type="text" name="name" id="name" value=`${user.dados.name}` required)
 
@@ -49,12 +49,12 @@ block content
 
           // Non-editable fields for dateCreated and lastAccess
           .w3-row.w3-padding-16
-            label.w3-col.s3(for="dateCreated") Date Created
+            label.w3-col.s3(for="dateCreated") Data de Criação
             .w3-col.s9
               input.w3-input.w3-border(type="text" name="dateCreated" id="dateCreated" value=`${user.dados.dateCreated}` readonly)
 
           .w3-row.w3-padding-16
-            label.w3-col.s3(for="lastAccess") Last Access
+            label.w3-col.s3(for="lastAccess") Último Acesso
             .w3-col.s9
               input.w3-input.w3-border(type="text" name="lastAccess" id="lastAccess" value=`${user.dados.lastAccess}` readonly)
 
@@ -68,11 +68,11 @@ block content
             else
                 p 
         .w3-center
-          button.w3-button.w3-pink.w3-margin-top(type="submit") Submit
+          button.w3-button.w3-pink.w3-margin-top(type="submit") Submeter
 
     else
       .w3-container
-        p User data not found.
+        p Dados de utilizador não encontrados.
 
 
 

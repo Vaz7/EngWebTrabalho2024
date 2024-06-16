@@ -11,7 +11,7 @@ block content
     a.w3-bar-item.w3-button(class=(activePage === 'perfil' ? 'w3-gray' : ''), href="/perfil") Perfil
     a.w3-bar-item.w3-button(class=(activePage === 'search' ? 'w3-gray' : ''), href="/search") Pesquisa
     a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
-    a.w3-bar-item.w3-button(class=(activePage === 'registar/admin' ? 'w3-gray' : ''), href="/registar/admin") Adicionar admin
+    a.w3-bar-item.w3-button(class=(activePage === 'registar/admin' ? 'w3-gray' : ''), href="/registar/admin") Adicionar Admin
     a.w3-bar-item.w3-button(class=(activePage === 'users' ? 'w3-gray' : ''), href="/users") Consultar Utilizadores
 
   .w3-container.w3-padding
@@ -19,7 +19,7 @@ block content
 
     form(action=`/acordaos/editar/${acordao._id}` method="POST" class="w3-container w3-card-4 w3-padding w3-light-grey form-container")
       fieldset.w3-padding
-        legend.w3-text-pink.w3-large Editar acordão
+        legend.w3-text-pink.w3-large Editar Acordão
 
         // Fields for elements that have data
         each campo in campos
@@ -38,10 +38,10 @@ block content
         #additionalFields
 
       .w3-row.w3-padding-16
-        label.w3-col.s3 Add Field
+        label.w3-col.s3 Adicionar Campo
         .w3-col.s9
           select.w3-select.w3-border.w3-light-grey(id="addFieldDropdown")
-            option(value="" disabled selected) Select a field to add
+            option(value="" disabled selected) Seleciona um Campo para Adicionar
             each campo in campos
               if !acordao[campo.NomeFixed]
                 option(value=campo.NomeFixed data-nome=campo.Nome) #{campo.Nome}

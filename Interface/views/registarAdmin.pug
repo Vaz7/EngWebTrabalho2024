@@ -13,7 +13,7 @@ block content
         a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
 
         if canAddAcordao
-            a.w3-bar-item.w3-button.w3-gray(href="/registar/admin") Adicionar admin
+            a.w3-bar-item.w3-button.w3-gray(href="/registar/admin") Adicionar Admin
             a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
 
     div(style="margin-top: 60px; display: flex; justify-content: center; align-items: center; height: calc(100vh - 60px);")
@@ -21,9 +21,9 @@ block content
             h2(class="w3-center") Criar Conta Administrador
             form(id="login-form" action="/registar/admin" method="post")
                 p
-                    .input-text(title="Username")
+                    .input-text(title="Nome de Utilizador")
                         i.fa-solid.fa-user.fa-lg
-                        input(name="username" type="text" placeholder="Username" autofocus required)
+                        input(name="username" type="text" placeholder="Nome de Utilizador" autofocus required)
                 p
                     .input-text(title="Nome")
                         i.fa-solid.fa-address-card.fa-lg

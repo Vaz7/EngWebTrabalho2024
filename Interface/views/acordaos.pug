@@ -13,7 +13,7 @@ block content
       a.w3-bar-item.w3-button(href="/search") Pesquisa
       a.w3-bar-item.w3-button.w3-right(href="/logout") Logout
       if canAddAcordao
-        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar admin
+        a.w3-bar-item.w3-button(href="/registar/admin") Adicionar Admin
         a.w3-bar-item.w3-button(href="/users") Consultar Utilizadores
     .w3-container
       h2 Acordãos
@@ -29,7 +29,7 @@ block content
             th Tribunal
             th Descritores
             th Data
-            th Details
+            th Detalhes
             if canAddAcordao
               th Remover
               th Editar
@@ -43,7 +43,7 @@ block content
               td= acordao.Descritores.join(', ')
               td= acordao.DataAcordao
               td
-                a.w3-button.w3-blue(href=`/acordaos/${acordao._id}`) View
+                a.w3-button.w3-blue(href=`/acordaos/${acordao._id}`) Ver
               if canAddAcordao 
                 td
                   a.w3-button.w3-red(href=`/acordaos/remover/${acordao._id}`) Remover
@@ -73,7 +73,7 @@ block content
 
           if endPage < totalPages
             form(action="/home", method="get", class="w3-inline w3-container w3-center", style="display: inline-block; margin: 0; padding: 0; width: auto;")
-              input.w3-input(type="number", name="page", min="1", max=totalPages, placeholder="Page", style="width: 70px; display: inline-block;")
+              input.w3-input(type="number", name="page", min="1", max=totalPages, placeholder="", style="width: 70px; display: inline-block;")
               input(type="hidden", name="limit", value=limit)
               button.w3-button.w3-green(type="submit", style="display: inline-block; padding: 6px 12px;") Go
 
