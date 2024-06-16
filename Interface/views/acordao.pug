@@ -43,7 +43,7 @@ block content
       else
         form(action=`/users/${userId}/favoritos/${acordao._id}/delete`, method="post")
           input(type="hidden", name="_method", value="delete")
-          button.w3-button.w3-red(type="submit") Remove from Favorites
+          button.w3-button.w3-red(type="submit") Remover dos Favoritos
       if isAdmin
         a.w3-button.w3-red(href=`/acordaos/remover/${acordao._id}`) Remover acordão
         a.w3-button.w3-pink(href=`/acordaos/editar/${acordao._id}`) Editar acordão
@@ -54,13 +54,13 @@ block content
       .w3-modal-content
         .w3-container
           span.w3-button.w3-display-topright(onclick="document.getElementById('addFavModal').style.display='none'") &times;
-          h2 Add to Favorites
+          h2 Adicionar Favoritos
           form(action=`/users/${userId}/favoritos`, method="post")
             input(type="hidden", name="favorito", value=acordao._id)
             p
-              label(for="comment") Comment:
+              label(for="comment") Comentário:
               textarea.w3-input(name="comment")
-            button.w3-button.w3-green(type="submit") Submit
+            button.w3-button.w3-green(type="submit") Submeter
 
     script.
       // Close the modal when clicking outside of it

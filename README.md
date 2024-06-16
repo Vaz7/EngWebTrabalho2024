@@ -108,20 +108,23 @@ No servidor de autenticação é criado o ***token*** (*jsonwebtoken*) sempre é
 - `GET /acordaos/download/:id`: Rota que faz o download do acordão passado nos parametros.
 - `POST /users/:id/favoritos`: Rota que adiciona um acordão aos favoritos fazendo um POST para o servidor de autenticação.
 - `POST /users/:id/favoritos/:acordaoId/delete`: Rota que remove um acordão dos favoritos fazendo um DELETE para o servidor de autenticação.
-- `POST /search`: 
-- `GET /search`:
-- `GET /perfil`:
-- `POST /perfil`:
-- `GET /perfil/delete`:
-- `GET /users`:
-- `GET /users/remover/:id`:
-- `GET /taxonomia`:
-- `GET /login/google`:
-- `GET /login/google/callback`:
-- `GET /login/facebook`:
-- `GET /login/facebook/callback`:
-- `GET /favoritos`:
-- `GET /tribunais`:
+- `POST /search`: Rota que realiza uma pesquisa com base nos critérios fornecidos e retorna os resultados.
+- `GET /search`: Rota que renderiza a página de pesquisa de acórdãos, populando a lista de tribunais e que exibe os resultados se os critérios de busca forem fornecidos.
+- `GET /perfil`: Rota que solicita os dados do utilizador que fez a solicitação.
+- `POST /perfil`:  Rota em que o servidor de interface envia ao servidor de autenticação os novos dados de um utilizador para serem atualizados.
+- `GET /perfil/delete`: Rota que remove o perfil do utilizador que faz a solicitação.
+- `GET /users`: Rota que permite ao administrador consultar todos os utilizadores registados.
+- `GET /users/remover/:id`: Rota que permite ao administrador remover um dado utilizador do sistema.
+- `GET /taxonomia`: Rota que devolve uma taxonomia dos descritores.
+- `GET /login/google`: Rota que redireciona o utilizador para o endpoint da autenticação da Google.
+- `GET /login/google/callback`: Rota utilizada como ponto de retorno após a autenticação que trás os dados do mesmo em caso de sucesso.
+- `GET /login/facebook`: Rota que redireciona o utilizador para o endpoint da autenticação da Meta.
+- `GET /login/facebook/callback`: Rota utilizada como ponto de retorno após a autenticação que trás os dados do mesmo em caso de sucesso.
+- `GET /favoritos`: Rota que renderiza os acórdãos selecionados como favoritos e o comentário que o utilizador lhes associou.
+- `GET /tribunais`: Rota responsável por mostrar ao utilizador todos os tribunais registados no sistema.
+- `GET /tribunais/adicionar`: Rota que permite ao administrador abrir uma página para poder introduzir os campos necessários para o registo de um novo tribunal.
+- `POST /tribunais/adicionar`: Rota que permite ao administrador adicionar um novo tribunal à base de dados.
+- `GET /tribunais/remover/:id`: Rota que permite ao administrador remover um tribunal da base de dados.
 
 
 ## **Demonstração do sistema**
@@ -145,7 +148,7 @@ Na página de login o utilizador pode inserir os dados da sua conta (caso já te
 
 
 ### **Home**
-A página home é onde aparecem todos os acordãos listados. Esta página é diferente para os utilizadores normais e para os administradores, enquanto os utilizadores apenas conseguem consultar os acordãos os administradores também têm as opções de os editar e remover. Os administradores podem também adicionar novos acordãos. 
+A página home é onde aparecem todos os acordãos listados. Esta página é diferente para os utilizadores normais e para os administradores, enquanto os utilizadores apenas conseguem consultar os acordãos os administradores também têm as opções de os editar e remover. Os administradores podem também adicionar novos acordãos. Nesta e nas restantes páginas onde são apresentados acórdãos é feita a paginação dos mesmos, sendo apresentados 25 acórdãos de cada vez.
 
 
 <div align="center">
@@ -201,7 +204,7 @@ Ao clicar no Tribunal da Relação do Porto o utilizador é redirecionado para a
 
 
 ### **Taxonomia**
-Na página da taxonomia é apresentada uma taxonomia de desctritores, o utilizador pode também pesquisar por keywords de forma a filtrar os termos apresentados. Clicando num dos descritores o utilizador é reencaminhado para a página de pesquisa onde é feita uma pesquisa por todos os acordãos que incluam esse descritor. Nesta página é também feita páginação para aumento de performance.
+Na página da taxonomia é apresentada uma taxonomia de descritores, o utilizador pode também pesquisar por keywords de forma a filtrar os termos apresentados. Clicando num dos descritores o utilizador é reencaminhado para a página de pesquisa onde é feita uma pesquisa por todos os acordãos que incluam esse descritor. Nesta página é também feita páginação para aumento de performance.
 
 <div align="center">
 <img width="60%" src="imagensRelatorio/taxonomia.png"/>
@@ -248,7 +251,11 @@ Os administradores têm também a opção de consultar todas as contas existente
 
 
 ## **Conclusão**
-FALTA
+Em suma, criámos uma interface web intuitiva que permite a navegação completa pela informação disponibilizada, proporcionando uma interação amigável e eficiente para os utilizadores. Esta interface foi concebida para ser fácil de utilizar, com uma disposição clara e lógica que facilita a utilização mesmo para quem não tenha grandes conhecimentos técnicos. Implementámos funcionalidades robustas para a criação, edição e remoção de acórdãos, permitindo que os administradores giram os dados de forma eficaz e sem complicações. Desenvolvemos também um sistema de pesquisa avançado que facilita a localização de acórdãos específicos através de diversos critérios, como autor, tribunal, magistrado e descritor, garantindo que os utilizadores consigam encontrar rapidamente a informação de que necessitam. Além disso, a funcionalidade de favoritos permite aos utilizadores guardar acórdãos relevantes, proporcionando uma maneira conveniente de aceder rapidamente aos documentos mais importantes para eles. A construção de uma taxonomia de descritores dos acórdãos melhorou significativamente a organização e acessibilidade dos dados, tornando a navegação ainda mais intuitiva.
+
+A implementação de um servidor de autenticação garantiu a segurança dos dados dos utilizadores, utilizando tokens JWT para autenticação e gestão de sessões. Este sistema de autenticação foi desenhado para ser seguro e eficiente, protegendo a privacidade dos utilizadores e assegurando que apenas utilizadores autorizados podem aceder à informação sensível. Durante o desenvolvimento, enfrentámos vários desafios, incluindo a integração entre os diferentes serviços (interface, API e autenticação), o tratamento e limpeza dos datasets para garantir a qualidade e consistência dos dados na base de dados, e a implementação de um sistema de autenticação robusto para proteger os dados dos utilizadores.
+
+O desenvolvimento desta aplicação é um ponto de partida para futuras melhorias e expansões. Possíveis desenvolvimentos incluem a introdução de novas funcionalidades que atendam às necessidades dos utilizadores, a otimização da performance da aplicação para lidar com grandes volumes de dados e o contínuo aprimoramento das práticas de segurança para proteger os dados dos utilizadores. Pretendemos continuar a evoluir esta aplicação, incorporando feedback dos utilizadores e integrando novas tecnologias para melhorar ainda mais a experiência do utilizador.
 
 ## **Correr o projeto**
 

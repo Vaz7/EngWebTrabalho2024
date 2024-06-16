@@ -847,7 +847,7 @@ router.get('/taxonomia', Auth.verificaAutenticacao, async function(req, res, nex
 
 router.get('/login/google', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/google/callback`;
-  const authUrl = `http://acordaosauth:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
+  const authUrl = `http://localhost:7777/users/login/google?returnUrl=${encodeURIComponent(returnUrl)}`;
 
   res.redirect(authUrl);
 });
@@ -875,7 +875,7 @@ router.get('/login/google/callback', function(req, res) {
 
 router.get('/login/facebook', function(req, res) {
   const returnUrl = `${req.protocol}://${req.get('host')}/login/facebook/callback`;
-  const authUrl = `http://acordaosauth:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
+  const authUrl = `http://localhost:7777/users/login/facebook?returnUrl=${encodeURIComponent(returnUrl)}`;
 
   res.redirect(authUrl);
 });
