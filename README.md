@@ -258,13 +258,20 @@ A implementação de um servidor de autenticação garantiu a segurança dos dad
 O desenvolvimento desta aplicação é um ponto de partida para futuras melhorias e expansões. Possíveis desenvolvimentos incluem a introdução de novas funcionalidades que atendam às necessidades dos utilizadores, a otimização da performance da aplicação para lidar com grandes volumes de dados e o contínuo aprimoramento das práticas de segurança para proteger os dados dos utilizadores. Pretendemos continuar a evoluir esta aplicação, incorporando feedback dos utilizadores e integrando novas tecnologias para melhorar ainda mais a experiência do utilizador.
 
 ## **Correr o projeto**
+`git clone git@github.com:Vaz7/EngWebTrabalho2024.git`
+
+
+No caso de na raiz do repositório não existir uma pasta chamada dump o seu download pode ser feito [aqui](https://mega.nz/file/k3VUxaKa#69zGOknHC27HI62GRsi0mXGzUNIzld0HZJ8MSglOxB4).
+
+Após efetuar o download basta extrair o zip para a raiz do projeto e seguir as restantes instruções.
+
 
 Executar os comandos:
-
-`git clone git@github.com:Vaz7/EngWebTrabalho2024.git`
 
 `cd EngWebTrabalho2024`
 
 `sudo docker-compose up --build`
 
 Existe já criada uma conta de administrador com Email: `admin` e Password: `12345`. Para testar com uma conta normal basta fazer um novo registo de utilizador.
+
+Os datasets já tratados podem ser encontrados [aqui](https://mega.nz/folder/InMRjDhb#VrFvMV202_nSia_TCIGaXg).
